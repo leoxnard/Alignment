@@ -1,0 +1,110 @@
+:root {--matrix-scale: 1;}
+
+.matrix {
+    position: relative;
+    display:inline-block;
+    border: 3px solid #aaaaaa;
+    transform-origin: 0 0;
+    transform: scale(var(--matrix-scale));
+}
+
+.matrixContainer {
+    display:inline-block;
+    margin: 20px;
+}
+
+.arrow0, .arrow1, .arrow2, .arrow3, .arrow4, .arrow5, .arrow6, .arrow7 {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    pointer-events: none;
+    bottom: 10px;
+    right: 10px;
+    z-index: 1;
+    background-size: 50px 50px;
+}
+.arrow1 {background-image: url('./Icons/ArrowD.png');}
+.arrow2 {background-image: url('./Icons/ArrowV.png');}
+.arrow3 {background-image: url('./Icons/ArrowH.png');}
+.arrow4 {background-image: url('./Icons/ArrowDV.png');}
+.arrow5 {background-image: url('./Icons/ArrowDH.png');}
+.arrow6 {background-image: url('./Icons/ArrowVH.png');}
+.arrow7 {background-image: url('./Icons/ArrowDVH.png');}
+
+.lineH, .lineD, .lineV {
+    width: 11px;
+    height: 0px;
+    border-bottom: 1px solid #ffffff;
+    position: absolute;
+    bottom: 4.5px;
+}
+
+.lineH {right: 4.5px;}
+.lineV {bottom: 9.5px; transform: rotate(90deg);}
+.lineD {width: 14px; right: 3px; bottom: 9.5px; transform: rotate(45deg);}
+
+.off {
+    display: none;
+}
+
+.square {
+    width: 50px;
+    height: 50px;
+    margin: 0px;
+    padding: 0px;
+    font-size: 20px;
+    border: 0.5px solid #aaaaaa;
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    text-align: center;
+    vertical-align: top;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.row {
+    height: auto;
+    display:flex;
+    line-height: 0;
+}
+
+.mini {
+    font-size: 0%;
+    margin: 0;
+    pad: 0;
+    width: 10px;
+    height: 10px;
+    border: 0px;
+    background-color: #000000;
+}
+
+.first-row {
+    border-bottom: solid 3px #aaaaaa;
+    background-color: #4c4c4c;
+    z-index: 1;
+}
+
+.first-col {
+    border-right: solid 3px #aaaaaa;
+    background-color: #4c4c4c;
+    z-index: 1;
+}
+
+.level2Score {background-color: #1a0000;}
+
+.level3Score {background-color: #330000;}
+
+.level4Score {background-color: #4d0000;}
+
+.level5Score {background-color: #660000;}
+
+.level6Score {background-color: #800000;}
+
+.level7Score {background-color: #990000;}
+
+.level8Score {background-color: #b30000;}
+
+.level9Score {background-color: #cc0000;}
+
+.level10Score {background-color: #ff0000;}
