@@ -27,83 +27,79 @@ export class Allignment extends Component {
       scale: 1,
       linearSpace: false,
       showAllignments: false,
-      ShowAllAllignments: false,
+      showAllAllignments: false,
     };
   }
 
   computeAllignment() {
     if (!(isNaN(parseInt(this.state.matchScore)) || isNaN(parseInt(this.state.mismatchScore)) || isNaN(parseInt(this.state.gapPenalties)))){
-      const [scoreMatrix, minScore, maxScores, tracebackMatrix, allignmentList, score] = computeScores(this.state.seq1, this.state.seq2, parseInt(this.state.matchScore), parseInt(this.state.mismatchScore), parseInt(this.state.gapPenalties), this.state.local, this.state.linearSpace, this.state.ShowAllAllignments);
+      const [scoreMatrix, minScore, maxScores, tracebackMatrix, allignmentList, score] = computeScores(this.state.seq1, this.state.seq2, parseInt(this.state.matchScore), parseInt(this.state.mismatchScore), parseInt(this.state.gapPenalties), this.state.local, this.state.linearSpace, this.state.showAllAllignments);
       this.setState({scoreMatrix: scoreMatrix, tracebackMatrix: tracebackMatrix, minScore: minScore, maxScores: maxScores, allignmentList: allignmentList, score: score});
     }
   }
 
   handleChangeSeq1(e) {
-    if (this.state.realTime) {
-      this.setState({ seq1:  e.target.value.toUpperCase()}, () => {
-        this.computeAllignment();
-      })
-    } else {
-      this.setState({ seq1: e.target.value.toUpperCase() })
+    if (!this.state.realTime) {
+      this.setState({ seq1: e.target.value.toUpperCase() });
+      return;
     }
+    if (e.target.value.length + this.state.seq2.length > 60) {
+      this.setState({ seq1:  e.target.value.toUpperCase(), showAllAllignments: false}, () => {this.computeAllignment();})
+      return;
+    }
+    this.setState({ seq1:  e.target.value.toUpperCase()}, () => {this.computeAllignment();})
   }
 
   handleChangeSeq2(e) {
-    if (this.state.realTime) {
-      this.setState({ seq2:  e.target.value.toUpperCase()}, () => {
-        this.computeAllignment();
-      })
-    } else {
-      this.setState({ seq2: e.target.value.toUpperCase() })
+    if (!this.state.realTime) {
+      this.setState({ seq2: e.target.value.toUpperCase() });
+      return;
     }
+    if (e.target.value.length + this.state.seq1.length > 60) {
+      this.setState({ seq2:  e.target.value.toUpperCase(), showAllAllignments: false}, () => {this.computeAllignment();})
+      return;
+    }
+    this.setState({ seq2:  e.target.value.toUpperCase()}, () => {this.computeAllignment();})
   }
 
   handleChangeMatch(e) {
-    if (this.state.realTime) {
-      this.setState({ matchScore: e.target.value }, () => {
-          this.computeAllignment();
-      })
-    } else {
+    if (!this.state.realTime) {
       this.setState({ matchScore: e.target.value });
+      return;
     }
+    this.setState({ matchScore: e.target.value }, () => {this.computeAllignment();})
   }
 
   handleChangeMismatch(e) {
-    if (this.state.realTime) {
-      this.setState({ mismatchScore: e.target.value }, () => {
-          this.computeAllignment();
-      })
-    } else {
+    if (!this.state.realTime) {
       this.setState({ mismatchScore: e.target.value });
+      return;
     }
+    this.setState({ mismatchScore: e.target.value }, () => {this.computeAllignment();})
   }
 
   handleChangeGap(e) {
-    if (this.state.realTime) {
-      this.setState({ gapPenalties: e.target.value }, () => {
-          this.computeAllignment();
-      })
-    } else {
+    if (!this.state.realTime) {
       this.setState({ gapPenalties: e.target.value });
+      return;
     }
+    this.setState({ gapPenalties: e.target.value }, () => {this.computeAllignment();})
   }
 
   handleMiniClick() {
     if (this.state.minimalistic){
       this.setState({minimalistic: false});
-    }else{
-      this.setState({minimalistic: true});
+      return;
     }
+    this.setState({minimalistic: true});
   }
 
   handleRealTimeClick() {
     if (this.state.realTime){
       this.setState({realTime: false});
-    }else{
-      this.setState({realTime: true}, () => {
-        this.computeAllignment();
-      });
+      return;
     }
+    this.setState({realTime: true}, () => {this.computeAllignment();})
   }
 
   handleRenderClick() {
@@ -115,87 +111,101 @@ export class Allignment extends Component {
   handleLocalClick() {
     if (this.state.realTime){
       if (this.state.local){
-        this.setState({local: false}, () => {
-          this.computeAllignment();
-        });
-      }else{
-        this.setState({local: true}, () => {
-          this.computeAllignment();
-        });
+        this.setState({local: false}, () => {this.computeAllignment();});
+        return;
       }
-    } else {
-      if (this.state.local){
-        this.setState({local: false});
-      }else{
-        this.setState({local: true});
-      }
+      this.setState({local: true}, () => {this.computeAllignment();});
+      return;
     }
+    if (this.state.local){
+      this.setState({local: false});
+      return;
+    }
+    this.setState({local: true});
   }
 
   handleLinearClick() {
     if (this.state.realTime && !this.state.local){
       if (this.state.linearSpace){
-        this.setState({linearSpace: false}, () => {
-          this.computeAllignment();
-        });
-      }else{
-        this.setState({linearSpace: true}, () => {
-          this.computeAllignment();
-        });
+        this.setState({linearSpace: false}, () => {this.computeAllignment();});
+        return;
       }
-    } else if (!this.state.local) {
+      this.setState({linearSpace: true}, () => {
+        this.computeAllignment();
+      });
+      return;
+    }
+    if (!this.state.local) {
       if (this.state.linearSpace){
         this.setState({linearSpace: false});
-      }else{
-        this.setState({linearSpace: true});
+        return;
       }
+      this.setState({linearSpace: true});
     }
   }
 
   handleRandomAAClick() {
-    let seq1; let seq2;
     if (this.state.minimalistic){
-      seq1 = randomAASequence(Math.floor(window.innerWidth) / (this.state.scale * 10) - (6 / this.state.scale));
-      seq2 = randomAASequence(Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale));
-    } else {
-      seq1 = randomAASequence(Math.floor(window.innerWidth) / (this.state.scale * 51) - 3);
-      seq2 = randomAASequence(Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))));
+      const seq1 = randomAASequence(Math.floor(window.innerWidth) / (this.state.scale * 10) - (6 / this.state.scale));
+      const seq2 = randomAASequence(Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale));
+      if (seq1.length + seq2.length > 60) {
+        this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
+        return;
+      }
+      this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
+      return;
     }
-    this.setState({ seq1: seq1, seq2: seq2 }, () => {
-      this.computeAllignment();
-    })
+    const seq1 = randomAASequence(Math.floor(window.innerWidth) / (this.state.scale * 51) - 3);
+    const seq2 = randomAASequence(Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))));
+    if (seq1.length + seq2.length > 60) {
+      this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
+      return;
+    }
+    this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
   }
 
   handleRandomDNAClick() {
-    let seq1; let seq2;
     if (this.state.minimalistic){
-      seq1 = randomDNASequence(Math.floor(window.innerWidth) / (this.state.scale * 10) - (6 / this.state.scale));
-      seq2 = randomDNASequence(Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale));
-    } else {
-      seq1 = randomDNASequence(Math.floor(window.innerWidth) / (this.state.scale * 51) - 3);
-      seq2 = randomDNASequence(Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))));
+      const seq1 = randomDNASequence(Math.floor(window.innerWidth) / (this.state.scale * 10) - (6 / this.state.scale));
+      const seq2 = randomDNASequence(Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale));
+      if (seq1.length + seq2.length > 60) {
+        this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
+        return;
+      }
+      this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
+      return;
     }
-    this.setState({ seq1: seq1, seq2: seq2 }, () => {
-      this.computeAllignment();
-    })
+    const seq1 = randomDNASequence(Math.floor(window.innerWidth) / (this.state.scale * 51) - 3);
+    const seq2 = randomDNASequence(Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))));
+    if (seq1.length + seq2.length > 60) {
+      this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
+      return;
+    }
+    this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
   }
 
   handleScaleSlide(e) {
-    this.setState({ scale: e.target.value }, () => {
-      document.documentElement.style.setProperty('--matrix-scale', e.target.value);
-    })
+    this.setState({ scale: e.target.value }, () => {document.documentElement.style.setProperty('--matrix-scale', e.target.value);})
   }
 
   handleShoweAllignments() {
     if (this.state.showAllignments) {
       this.setState({ showAllignments: false });
-    } else {
-      this.setState({ showAllignments: true });
+      return;
     }
+    this.setState({ showAllignments: true });
+  }
+
+  handleShoweAllAllignments() {
+    if (this.state.showAllAllignments) {
+      this.setState({ showAllAllignments: false }, () => {this.computeAllignment();});
+      return;
+    }
+    this.setState({ showAllAllignments: true }, () => {this.computeAllignment();});
   }
 
   render() {
-    const { seq1, seq2, matchScore, mismatchScore, gapPenalties, local, minimalistic, linearSpace, scoreMatrix, tracebackMatrix, minScore, maxScores, scale, realTime, allignmentList, score, showAllignments } = this.state;
+    const { seq1, seq2, matchScore, mismatchScore, gapPenalties, local, minimalistic, linearSpace, scoreMatrix, tracebackMatrix, minScore, maxScores, scale, realTime, allignmentList, score, showAllignments, showAllAllignments } = this.state;
     return (
       <Fragment>
         <div className='headlineContainer'>
@@ -247,6 +257,10 @@ export class Allignment extends Component {
               <button className='switchContainer' onClick={() => this.handleMiniClick()}>
                 <div className={minimalistic ? 'rectangle disabled' : 'rectangle'}>{'Regular'}</div>
                 <div className={minimalistic ? 'rectangle' : 'rectangle disabled'}>{'Minimalistic'}</div>
+              </button>
+              <button className='switchContainer' onClick={() => this.handleShoweAllAllignments()}>
+                <div className={showAllAllignments ? 'rectangle disabled' : 'rectangle'}>{'one result'}</div>
+                <div className={showAllAllignments ? 'rectangle' : 'rectangle disabled'}>{'all results.'}</div>
               </button>
               <div className='slideContainer'>
                 <label className='sideBarLabel'>Scale:</label>

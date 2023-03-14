@@ -214,6 +214,38 @@ function getTraceArray(traceback, seq1Length, starters) {
 }
 
 const matchSymbol = '|'; const mismatchSymbol = '‡'; const gapSymbol = '+';
+function getAllignment(array, seq1, seq2, arrayPos, seq1Pos_, seq2Pos_) {
+  let pos = arrayPos;
+  let seq1Pos = seq1Pos_;
+  let seq2Pos = seq2Pos_;
+  let str1 = '';
+  let str2 = '';
+  let symbols = '';
+  while (array[pos] !== 0) {
+    if (array[pos] === 3) {
+      str1 += seq1[seq1Pos];
+      seq1Pos--;
+      str2 += '-';
+      symbols += gapSymbol;
+      pos--;
+    } else if (array[pos] === 2 || array[pos] === 6) {
+      str1 += '-';
+      str2 += seq2[seq2Pos];
+      seq2Pos--;
+      symbols += gapSymbol;
+      pos -= seq1.length + 2;
+    } else {
+      symbols += (seq1[seq1Pos] === seq2[seq2Pos] ? matchSymbol : mismatchSymbol);      str1 += seq1[seq1Pos];
+      seq1Pos--;
+      str2 += seq2[seq2Pos];
+      seq2Pos--;
+      pos -= seq1.length + 3;
+    }
+  }
+  console.table([str1, str2, symbols])
+  return [[str1, str2, symbols]]
+}
+
 function getAllAllignments(array, seq1, seq2, arrayPos, seq1Pos, seq2Pos) {
   const seq1Length = seq1.length
   if (array[arrayPos] === 1) {
@@ -267,38 +299,6 @@ function merge(array, multipleArray) {
         merged.push( [ (str1a + str1b) , (str2a + str2b) , (symbol1 + symbol2)] );
     }
     return merged;
-}
-
-function getAllignment(array, seq1, seq2, arrayPos, seq1Pos_, seq2Pos_) {
-  let pos = arrayPos;
-  let seq1Pos = seq1Pos_;
-  let seq2Pos = seq2Pos_;
-  let str1 = '';
-  let str2 = '';
-  let symbols = '';
-  while (array[pos] !== 0) {
-    if (array[pos] === 3) {
-      str1 += seq1[seq1Pos];
-      seq1Pos--;
-      str2 += '-';
-      symbols += gapSymbol;
-      pos--;
-    } else if (array[pos] === 2 || array[pos] === 6) {
-      str1 += '-';
-      str2 += seq2[seq2Pos];
-      seq2Pos--;
-      symbols += gapSymbol;
-      pos -= seq1.length + 2;
-    } else {
-      symbols += (seq1[seq1Pos] === seq2[seq2Pos] ? matchSymbol : mismatchSymbol);      str1 += seq1[seq1Pos];
-      seq1Pos--;
-      str2 += seq2[seq2Pos];
-      seq2Pos--;
-      pos -= seq1.length + 3;
-    }
-  }
-  console.table([str1, str2, symbols])
-  return [[str1, str2, symbols]]
 }
 
 function getCoordinates(matchScore, mismatchScore, gapPenalties, seq1, seq2, seq1Start, seq1End, seq2Start, seq2End) {

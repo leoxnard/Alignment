@@ -11,6 +11,7 @@
 .matrixContainer {
     display:inline-block;
     margin: 20px;
+    margin-top: 90px;
 }
 
 .arrow0, .arrow1, .arrow2, .arrow3, .arrow4, .arrow5, .arrow6, .arrow7 {

@@ -4,6 +4,10 @@
     padding: 0;
     display: block;
     height: auto;
+    width: 100vw;
+    position: fixed;
+    justify-content: center;
+    z-index: 1;
 }
 
 .headline {
@@ -16,12 +20,12 @@
     position: relative;
     z-index: 2;
     display: flex;
-    flex-wrap: wrap;
     gap: 10px;
+    overflow-x: scroll;
 }
 
 .headlineFragment {
-    margin-right: 20px;
+    margin-right: 0px;
     padding: 0;
     display: flex;
     align-items: center;
@@ -116,7 +120,7 @@ input::-webkit-outer-spin-button {
 
 .sideBar {
     position: fixed;
-    top: -15px;
+    top: 0px;
     width: 250px;
     right: 0px;
     height: 100vw;
@@ -252,14 +256,11 @@ input::-webkit-outer-spin-button {
     .textInput {width: 100px;}
 }
 
-@media screen and (max-width: 700px) {
-    .headline {font-size: small;}
-    .numberInput {height: 20px; width: 20px;}
-    .textInput {height: 20px;}
-    .counterSquare {height: 20px;}
-    .statsBar {top: 35px;}
-}
-
 @media screen and (max-width: 400px) {
     .textInput {width: 50px;}
 }
+
+.sideBar::-webkit-scrollbar,
+.headline::-webkit-scrollbar {
+    display: none;
+  }
