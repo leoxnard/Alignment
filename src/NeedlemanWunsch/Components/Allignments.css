@@ -2,6 +2,7 @@
   font-family: monospace;
   margin-top: 10px;
   overflow-y: scroll;
+  overflow-x: hidden;
   max-height: calc(100vh - 145px);
 }
 

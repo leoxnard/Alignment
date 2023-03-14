@@ -242,7 +242,6 @@ function getAllignment(array, seq1, seq2, arrayPos, seq1Pos_, seq2Pos_) {
       pos -= seq1.length + 3;
     }
   }
-  console.table([str1, str2, symbols])
   return [[str1, str2, symbols]]
 }
 
