@@ -43,7 +43,7 @@ export class Allignment extends Component {
       this.setState({ seq1: e.target.value.toUpperCase() });
       return;
     }
-    if (e.target.value.length + this.state.seq2.length > 60) {
+    if (e.target.value.length + this.state.seq2.length > 100) {
       this.setState({ seq1:  e.target.value.toUpperCase(), showAllAllignments: false}, () => {this.computeAllignment();})
       return;
     }
@@ -55,7 +55,7 @@ export class Allignment extends Component {
       this.setState({ seq2: e.target.value.toUpperCase() });
       return;
     }
-    if (e.target.value.length + this.state.seq1.length > 60) {
+    if (e.target.value.length + this.state.seq1.length > 100) {
       this.setState({ seq2:  e.target.value.toUpperCase(), showAllAllignments: false}, () => {this.computeAllignment();})
       return;
     }
@@ -148,7 +148,7 @@ export class Allignment extends Component {
     if (this.state.minimalistic){
       const seq1 = randomAASequence(Math.floor(window.innerWidth) / (this.state.scale * 10) - (6 / this.state.scale));
       const seq2 = randomAASequence(Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale));
-      if (seq1.length + seq2.length > 60) {
+      if (seq1.length + seq2.length > 100) {
         this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
         return;
       }
@@ -157,7 +157,7 @@ export class Allignment extends Component {
     }
     const seq1 = randomAASequence(Math.floor(window.innerWidth) / (this.state.scale * 51) - 3);
     const seq2 = randomAASequence(Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))));
-    if (seq1.length + seq2.length > 60) {
+    if (seq1.length + seq2.length > 100) {
       this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
       return;
     }
@@ -168,7 +168,7 @@ export class Allignment extends Component {
     if (this.state.minimalistic){
       const seq1 = randomDNASequence(Math.floor(window.innerWidth) / (this.state.scale * 10) - (6 / this.state.scale));
       const seq2 = randomDNASequence(Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale));
-      if (seq1.length + seq2.length > 60) {
+      if (seq1.length + seq2.length > 100) {
         this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
         return;
       }
@@ -177,7 +177,7 @@ export class Allignment extends Component {
     }
     const seq1 = randomDNASequence(Math.floor(window.innerWidth) / (this.state.scale * 51) - 3);
     const seq2 = randomDNASequence(Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))));
-    if (seq1.length + seq2.length > 60) {
+    if (seq1.length + seq2.length > 100) {
       this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
       return;
     }
@@ -274,7 +274,7 @@ export class Allignment extends Component {
               </div>
               <div className='switchContainer'>
                 <button className={realTime ? 'rectangle' : 'rectangle disabled'} onClick={() => this.handleRealTimeClick()}>{'Live-Render'}</button>
-                <button className={realTime ? 'rectangle disabled' : 'rectangle'} onClick={() => this.handleRenderClick()}>{'Render'}</button>
+                <button className={realTime ? 'rectangle disabled' : 'rectangle'} onClick={() => this.handleRenderClick()}>{'Meine Lea <3'}</button>
               </div>
               <div className='switchContainer'>
                 <button className='rectangle' onClick={() => this.handleRandomDNAClick()}>{'random DNA'}</button>
