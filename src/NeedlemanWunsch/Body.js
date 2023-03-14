@@ -236,9 +236,15 @@ export class Allignment extends Component {
           <div className='statsWrapper'>
             <button className='statsButton'  onClick={() => this.handleShoweAllignments()} />
             <div className={showAllignments ? 'statsBar' : 'statsBar off'} >
-              <div className='scoreDiv'>
-                <label>{'Score'}</label>
-                <div className='rectangle' >{score}</div>
+              <div>
+                <div className='scoreDiv'>
+                  <label>{'Score'}</label>
+                  <div className='rectangle' >{score}</div>
+                </div>
+                <div className='scoreDiv'>
+                  <label>{'Allignments'}</label>
+                <div className='rectangle' >{allignmentList.length}</div>
+              </div>
               </div>
               <Allignments allignmentList={allignmentList} showAllignments={showAllignments}/>
             </div>

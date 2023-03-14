@@ -32,17 +32,24 @@
 .arrow6 {background-image: url('./Icons/ArrowVH.png');}
 .arrow7 {background-image: url('./Icons/ArrowDVH.png');}
 
-.lineH, .lineD, .lineV {
-    width: 11px;
-    height: 0px;
-    border-bottom: 1px solid #ffffff;
+.line0, .line1, .line2, .line3, .line4, .line5, .line6, .line7 {
     position: absolute;
-    bottom: 4.5px;
+    height: 20px;
+    width: 20px;
+    pointer-events: none;
+    bottom: 0px;
+    right: 0px;
+    z-index: 1;
+    background-size: 20px 20px;
 }
 
-.lineH {right: 4.5px;}
-.lineV {bottom: 9.5px; transform: rotate(90deg);}
-.lineD {width: 14px; right: 3px; bottom: 9.5px; transform: rotate(45deg);}
+.line1 {background-image: url('./Icons/Line1.png');}
+.line2 {background-image: url('./Icons/Line2.png');}
+.line3 {background-image: url('./Icons/Line3.png');}
+.line4 {background-image: url('./Icons/Line4.png');}
+.line5 {background-image: url('./Icons/Line5.png');}
+.line6 {background-image: url('./Icons/Line6.png');}
+.line7 {background-image: url('./Icons/Line7.png');}
 
 .off {
     display: none;

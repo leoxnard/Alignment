@@ -157,6 +157,7 @@ input::-webkit-outer-spin-button {
     padding-left: 10px;
     padding-top: 0px;
     padding-bottom: 0px;
+    margin-right: 10px;
 }
 
 .rectangle {
