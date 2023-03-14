@@ -274,7 +274,7 @@ export class Allignment extends Component {
               </div>
               <div className='switchContainer'>
                 <button className={realTime ? 'rectangle' : 'rectangle disabled'} onClick={() => this.handleRealTimeClick()}>{'Live-Render'}</button>
-                <button className={realTime ? 'rectangle disabled' : 'rectangle'} onClick={() => this.handleRenderClick()}>{'Meine Lea <3'}</button>
+                <button className={realTime ? 'rectangle disabled' : 'rectangle'} onClick={() => this.handleRenderClick()}>{'Render'}</button>
               </div>
               <div className='switchContainer'>
                 <button className='rectangle' onClick={() => this.handleRandomDNAClick()}>{'random DNA'}</button>
