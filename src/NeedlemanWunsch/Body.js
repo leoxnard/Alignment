@@ -264,7 +264,7 @@ export class Allignment extends Component {
               </button>
               <div className='slideContainer'>
                 <label className='sideBarLabel'>Scale:</label>
-                <input type='range' min='0.1' max='1' step='0.1' className='slider' value={scale} onChange={(e) => this.handleScaleSlide(e)}/>
+                <input type='range' min='0.4' max='1' step='0.1' className='slider' value={scale} onChange={(e) => this.handleScaleSlide(e)}/>
               </div>
               <div className='switchContainer'>
                 <button className={realTime ? 'rectangle' : 'rectangle disabled'} onClick={() => this.handleRealTimeClick()}>{'Live-Render'}</button>
