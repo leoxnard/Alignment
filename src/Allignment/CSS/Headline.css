@@ -53,8 +53,6 @@
     outline: none;
 }
 
-
-
 .counterSquare {
     height: 27px;
     background-color: #4f4f4f;
@@ -149,6 +147,27 @@ input::-webkit-outer-spin-button {
     padding: 10px;
 }
 
+.selectAlgorithm {
+    background-color: #4f4f4f;
+    color: #ffffff;
+    font-size: 15px;
+    margin: 10px;
+    padding: 10px;
+    border: solid 5px #282828;
+    border-radius: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.selectAlgorithm:hover {
+    background-color: #626262;
+}
+
+.selectAlgorithm:focus {
+    outline: none;
+}
+
 .scoreDiv {
     display: inline-flex;
     align-items: center;
@@ -172,6 +191,7 @@ input::-webkit-outer-spin-button {
     display: inline-flex;
     align-items: center;
     font-size: 15px;
+
 }
 
 .disabled {

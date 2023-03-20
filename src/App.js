@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Allignment from './NeedlemanWunsch/Body';
+import Allignment from './Allignment/Body';
 
 
 function App() {

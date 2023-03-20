@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
-import './Body.css';
-import './Matrix.css';
-import {computeScores} from './Algorithmms/NWSW'
+import './CSS/Headline.css';
+import './CSS/Matrix.css';
+import {computeScores} from './Algorithmms/Algorithms'
 import {randomAASequence, randomDNASequence} from './HelpFunctions/helpers'
 import Matrix from './Components/Matrix';
 import Allignments from './Components/Allignments';
@@ -15,25 +15,25 @@ export class Allignment extends Component {
       scoreMatrix: [0,0,0,0],
       tracebackMatrix: [0,0,0,0],
       allignmentList: [],
-      gapPenalties: '-1',
+      gapScore: '-1',
+      extensionScore: '-1',
       mismatchScore: '-1',
       matchScore: '1',
       maxScores: 4,
       minScore: 4,
       score: 0,
       minimalistic: false,
-      local: false,
+      algorithm: 0,
       realTime: true,
       scale: 1,
-      linearSpace: false,
       showAllignments: false,
       showAllAllignments: false,
     };
   }
 
   computeAllignment() {
-    if (!(isNaN(parseInt(this.state.matchScore)) || isNaN(parseInt(this.state.mismatchScore)) || isNaN(parseInt(this.state.gapPenalties)))){
-      const [scoreMatrix, minScore, maxScores, tracebackMatrix, allignmentList, score] = computeScores(this.state.seq1, this.state.seq2, parseInt(this.state.matchScore), parseInt(this.state.mismatchScore), parseInt(this.state.gapPenalties), this.state.local, this.state.linearSpace, this.state.showAllAllignments);
+    if (!(isNaN(parseInt(this.state.matchScore)) || isNaN(parseInt(this.state.mismatchScore)) || isNaN(parseInt(this.state.gapScore)))){
+      const [scoreMatrix, minScore, maxScores, tracebackMatrix, allignmentList, score] = computeScores(this.state.seq1, this.state.seq2, parseInt(this.state.matchScore), parseInt(this.state.mismatchScore), parseInt(this.state.gapScore), parseInt(this.state.extensionScore), this.state.algorithm, this.state.showAllAllignments);
       this.setState({scoreMatrix: scoreMatrix, tracebackMatrix: tracebackMatrix, minScore: minScore, maxScores: maxScores, allignmentList: allignmentList, score: score});
     }
   }
@@ -80,10 +80,10 @@ export class Allignment extends Component {
 
   handleChangeGap(e) {
     if (!this.state.realTime) {
-      this.setState({ gapPenalties: e.target.value });
+      this.setState({ gapScore: e.target.value });
       return;
     }
-    this.setState({ gapPenalties: e.target.value }, () => {this.computeAllignment();})
+    this.setState({ gapScore: e.target.value }, () => {this.computeAllignment();})
   }
 
   handleMiniClick() {
@@ -108,40 +108,12 @@ export class Allignment extends Component {
     }
   }
 
-  handleLocalClick() {
+  handleSelectAlgorithmChange(e) {
     if (this.state.realTime){
-      if (this.state.local){
-        this.setState({local: false}, () => {this.computeAllignment();});
-        return;
-      }
-      this.setState({local: true}, () => {this.computeAllignment();});
+      this.setState({algorithm: parseInt(e.target.value)}, () => {this.computeAllignment();});
       return;
     }
-    if (this.state.local){
-      this.setState({local: false});
-      return;
-    }
-    this.setState({local: true});
-  }
-
-  handleLinearClick() {
-    if (this.state.realTime && !this.state.local){
-      if (this.state.linearSpace){
-        this.setState({linearSpace: false}, () => {this.computeAllignment();});
-        return;
-      }
-      this.setState({linearSpace: true}, () => {
-        this.computeAllignment();
-      });
-      return;
-    }
-    if (!this.state.local) {
-      if (this.state.linearSpace){
-        this.setState({linearSpace: false});
-        return;
-      }
-      this.setState({linearSpace: true});
-    }
+    this.setState({algorithm: parseInt(e.target.value)});
   }
 
   handleRandomAAClick() {
@@ -188,7 +160,7 @@ export class Allignment extends Component {
     this.setState({ scale: e.target.value }, () => {document.documentElement.style.setProperty('--matrix-scale', e.target.value);})
   }
 
-  handleShoweAllignments() {
+  handleShowAllignments() {
     if (this.state.showAllignments) {
       this.setState({ showAllignments: false });
       return;
@@ -196,7 +168,7 @@ export class Allignment extends Component {
     this.setState({ showAllignments: true });
   }
 
-  handleShoweAllAllignments() {
+  handleShowAllAllignments() {
     if (this.state.showAllAllignments) {
       this.setState({ showAllAllignments: false }, () => {this.computeAllignment();});
       return;
@@ -205,7 +177,7 @@ export class Allignment extends Component {
   }
 
   render() {
-    const { seq1, seq2, matchScore, mismatchScore, gapPenalties, local, minimalistic, linearSpace, scoreMatrix, tracebackMatrix, minScore, maxScores, scale, realTime, allignmentList, score, showAllignments, showAllAllignments } = this.state;
+    const { seq1, seq2, matchScore, mismatchScore, gapScore, minimalistic,algorithm, scoreMatrix, tracebackMatrix, minScore, maxScores, scale, realTime, allignmentList, score, showAllignments, showAllAllignments } = this.state;
     return (
       <Fragment>
         <div className='headlineContainer'>
@@ -220,7 +192,7 @@ export class Allignment extends Component {
             </div>
             <div className='headlineFragment' >
               <label>Gap:</label>
-              <input className='numberInput' type='number' max='20' value={gapPenalties} onChange={this.handleChangeGap.bind(this)}/>
+              <input className='numberInput' type='number' max='20' value={gapScore} onChange={this.handleChangeGap.bind(this)}/>
             </div>
             <div className='headlineFragment' >
               <label>Sequence 1:</label>
@@ -234,7 +206,7 @@ export class Allignment extends Component {
             </div>
           </div>
           <div className='statsWrapper'>
-            <button className='statsButton'  onClick={() => this.handleShoweAllignments()} />
+            <button className='statsButton'  onClick={() => this.handleShowAllignments()} />
             <div className={showAllignments ? 'statsBar' : 'statsBar off'} >
               <div>
                 <div className='scoreDiv'>
@@ -251,26 +223,24 @@ export class Allignment extends Component {
           </div>
           <div className='settingsWrapper'>
             <button className='settingButton' />
-            <div className='sideBar'>
-              <button className='switchContainer'  onClick={() => this.handleLocalClick()}>
-                <div className={local ? 'rectangle disabled' : 'rectangle'}>{'Global'}</div>
-                <div className={local ? 'rectangle' : 'rectangle disabled'}>{'Local'}</div>
-              </button>
-              <button className='switchContainer'  onClick={() => this.handleLinearClick()}>
-                <div className={linearSpace ? 'rectangle disabled' : local ? 'rectangle disabled' : 'rectangle'}>{'non-Linear'}</div>
-                <div className={linearSpace ? ( local ? 'rectangle disabled' : 'rectangle') : 'rectangle disabled'}>{'Linear'}</div>
-              </button>
+            <div className='sideBar'> 
+              <select className='selectAlgorithm' value={algorithm} onChange={this.handleSelectAlgorithmChange.bind(this)} >
+                <option value={0}> Needleman-Wunsch </option>
+                <option value={1}> Needleman-Wunsch-Linear </option>
+                <option value={2}> Smith-Waterman </option>
+                <option value={3}> Gotoh </option>
+              </select>
               <button className='switchContainer' onClick={() => this.handleMiniClick()}>
                 <div className={minimalistic ? 'rectangle disabled' : 'rectangle'}>{'Regular'}</div>
                 <div className={minimalistic ? 'rectangle' : 'rectangle disabled'}>{'Minimalistic'}</div>
               </button>
-              <button className='switchContainer' onClick={() => this.handleShoweAllAllignments()}>
+              <button className='switchContainer' onClick={() => this.handleShowAllAllignments()}>
                 <div className={showAllAllignments ? 'rectangle disabled' : 'rectangle'}>{'one result'}</div>
                 <div className={showAllAllignments ? 'rectangle' : 'rectangle disabled'}>{'all results.'}</div>
               </button>
               <div className='slideContainer'>
                 <label className='sideBarLabel'>Scale:</label>
-                <input type='range' min='0.4' max='1' step='0.1' className='slider' value={scale} onChange={(e) => this.handleScaleSlide(e)}/>
+                <input type='range' min='0.3' max='1' step='0.1' className='slider' value={scale} onChange={(e) => this.handleScaleSlide(e)}/>
               </div>
               <div className='switchContainer'>
                 <button className={realTime ? 'rectangle' : 'rectangle disabled'} onClick={() => this.handleRealTimeClick()}>{'Live-Render'}</button>
