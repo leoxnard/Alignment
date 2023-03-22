@@ -121,7 +121,7 @@ input::-webkit-outer-spin-button {
     top: 0px;
     width: 250px;
     right: 0px;
-    height: 100vw;
+    height: 100vh;
     z-index: 10;
     background-color: #373737;
     color: #ffffff;
