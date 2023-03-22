@@ -149,7 +149,7 @@ export class Allignment extends Component {
 
   handleRandomAASquareClick() {
     if (this.state.minimalistic){
-      const size = Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale);
+      const size = Math.min(Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale), Math.floor(window.innerWidth) / (this.state.scale * 10) - (6 / this.state.scale));
       const seq1 = randomAASequence(size);
       const seq2 = randomAASequence(size);
       if (seq1.length + seq2.length > 100) {
@@ -159,7 +159,7 @@ export class Allignment extends Component {
       this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
       return;
     }
-    const size_2 = Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4)));
+    const size_2 = Math.min(Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))), Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))));
     const seq1 = randomAASequence(size_2);
     const seq2 = randomAASequence(size_2);
     if (seq1.length + seq2.length > 100) {
@@ -191,7 +191,7 @@ export class Allignment extends Component {
 
   handleRandomDNASquareClick() {
     if (this.state.minimalistic){
-      const size = Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale);
+      const size = Math.min(Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale), Math.floor(window.innerWidth) / (this.state.scale * 10) - (6 / this.state.scale));
       const seq1 = randomDNASequence(size);
       const seq2 = randomDNASequence(size);
       if (seq1.length + seq2.length > 100) {
@@ -201,7 +201,7 @@ export class Allignment extends Component {
       this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
       return;
     }
-    const size_2 = Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4)));
+    const size_2 = Math.min(Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))), Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))));
     const seq1 = randomDNASequence(size_2);
     const seq2 = randomDNASequence(size_2);
     if (seq1.length + seq2.length > 100) {
