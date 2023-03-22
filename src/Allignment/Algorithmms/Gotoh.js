@@ -104,13 +104,7 @@ export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extension
       else if (scores[pos] < scores[minScore]) {minScore = pos;}
     }
   }
-  console.log('m_matrix:')
-  console.table(m_matrix)
-  console.log('iy_matrix:')   
-  console.table(iy_matrix)   
-  console.log('ix_matrix:')   
-  console.table(ix_matrix)
-
+  
   const array = new Array(traceback.length).fill(0);
   const gonnaVisit = new Array(traceback.length).fill(0);
   const maxStart = Math.max(m_matrix[matricesLength - 1], ix_matrix[matricesLength - 1], iy_matrix[matricesLength - 1]);
@@ -130,8 +124,6 @@ export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extension
 
   // All hashes
   for (let pos = traceback.length - 1; pos >= seq1Length + 4; pos--) {
-    console.log('gonnaVisit:')
-    console.table(gonnaVisit)
     array[pos] = gonnaVisit[pos];
     if ([1, 4, 5, 7].includes(gonnaVisit[pos])) {
       gonnaVisit[pos - (seq1Length + 2) - 1] = m_matrix[matricesLength + pos];
@@ -143,8 +135,6 @@ export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extension
       gonnaVisit[pos - 1] = ix_matrix[matricesLength + pos];
     }
   }
-  console.log('array:')
-  console.table(array)
 
   let allignments;
   if (showAllAllignments) {

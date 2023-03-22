@@ -10,12 +10,12 @@ export class Allignment extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      seq1: 'TTT',
-      seq2: 'T',
+      seq1: '',
+      seq2: '',
       scoreMatrix: [0,0,0,0],
       tracebackMatrix: [0,0,0,0],
       allignmentList: [],
-      gapScore: '-2',
+      gapScore: '-1',
       extensionScore: '-1',
       mismatchScore: '-1',
       matchScore: '1',
@@ -32,7 +32,7 @@ export class Allignment extends Component {
   }
 
   computeAllignment() {
-    if (!(isNaN(parseInt(this.state.matchScore)) || isNaN(parseInt(this.state.mismatchScore)) || isNaN(parseInt(this.state.gapScore)))){
+    if (!(isNaN(parseInt(this.state.matchScore)) || isNaN(parseInt(this.state.mismatchScore)) || isNaN(parseInt(this.state.gapScore)) || (isNaN(parseInt(this.state.extensionScore)) && this.state.algorithm === 3))){
       const [scoreMatrix, minScore, maxScores, tracebackMatrix, allignmentList, score] = computeScores(this.state.seq1, this.state.seq2, parseInt(this.state.matchScore), parseInt(this.state.mismatchScore), parseInt(this.state.gapScore), parseInt(this.state.extensionScore), this.state.algorithm, this.state.showAllAllignments);
       this.setState({scoreMatrix: scoreMatrix, tracebackMatrix: tracebackMatrix, minScore: minScore, maxScores: maxScores, allignmentList: allignmentList, score: score});
     }
@@ -84,6 +84,15 @@ export class Allignment extends Component {
       return;
     }
     this.setState({ gapScore: e.target.value }, () => {this.computeAllignment();})
+  
+  }
+
+  handleChangeExtension(e) {
+    if (!this.state.realTime) {
+      this.setState({ extensionScore: e.target.value });
+      return;
+    }
+    this.setState({ extensionScore: e.target.value }, () => {this.computeAllignment();})
   }
 
   handleMiniClick() {
@@ -109,6 +118,8 @@ export class Allignment extends Component {
   }
 
   handleSelectAlgorithmChange(e) {
+    if (e.target.value === '3') {this.setState({gapScore: '-2', mismatchScore: '-2', matchScore: '2'});}
+    if (this.state.algorithm === 3) {this.setState({gapScore: this.state.extensionScore, mismatchScore: this.state.extensionScore, matchScore: (-1 * this.state.extensionScore)});}
     if (this.state.realTime){
       this.setState({algorithm: parseInt(e.target.value)}, () => {this.computeAllignment();});
       return;
@@ -136,6 +147,28 @@ export class Allignment extends Component {
     this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
   }
 
+  handleRandomAASquareClick() {
+    if (this.state.minimalistic){
+      const size = Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale);
+      const seq1 = randomAASequence(size);
+      const seq2 = randomAASequence(size);
+      if (seq1.length + seq2.length > 100) {
+        this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
+        return;
+      }
+      this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
+      return;
+    }
+    const size_2 = Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4)));
+    const seq1 = randomAASequence(size_2);
+    const seq2 = randomAASequence(size_2);
+    if (seq1.length + seq2.length > 100) {
+      this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
+      return;
+    }
+    this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
+  }
+
   handleRandomDNAClick() {
     if (this.state.minimalistic){
       const seq1 = randomDNASequence(Math.floor(window.innerWidth) / (this.state.scale * 10) - (6 / this.state.scale));
@@ -156,6 +189,28 @@ export class Allignment extends Component {
     this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
   }
 
+  handleRandomDNASquareClick() {
+    if (this.state.minimalistic){
+      const size = Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale);
+      const seq1 = randomDNASequence(size);
+      const seq2 = randomDNASequence(size);
+      if (seq1.length + seq2.length > 100) {
+        this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
+        return;
+      }
+      this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
+      return;
+    }
+    const size_2 = Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4)));
+    const seq1 = randomDNASequence(size_2);
+    const seq2 = randomDNASequence(size_2);
+    if (seq1.length + seq2.length > 100) {
+      this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
+      return;
+    }
+    this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
+  }
+
   handleScaleSlide(e) {
     this.setState({ scale: e.target.value }, () => {document.documentElement.style.setProperty('--matrix-scale', e.target.value);})
   }
@@ -169,7 +224,7 @@ export class Allignment extends Component {
   }
 
   handleShowAllAllignments() {
-    if (this.state.showAllAllignments) {
+    if (this.state.showAllAllignments ) {
       this.setState({ showAllAllignments: false }, () => {this.computeAllignment();});
       return;
     }
@@ -177,7 +232,7 @@ export class Allignment extends Component {
   }
 
   render() {
-    const { seq1, seq2, matchScore, mismatchScore, gapScore, minimalistic,algorithm, scoreMatrix, tracebackMatrix, minScore, maxScores, scale, realTime, allignmentList, score, showAllignments, showAllAllignments } = this.state;
+    const { seq1, seq2, matchScore, mismatchScore, gapScore, extensionScore, minimalistic, algorithm, scoreMatrix, tracebackMatrix, minScore, maxScores, scale, realTime, allignmentList, score, showAllignments, showAllAllignments } = this.state;
     return (
       <Fragment>
         <div className='headlineContainer'>
@@ -194,6 +249,10 @@ export class Allignment extends Component {
               <label>Gap:</label>
               <input className='numberInput' type='number' max='20' value={gapScore} onChange={this.handleChangeGap.bind(this)}/>
             </div>
+            <div className={algorithm === 3 ? 'headlineFragment' : 'headlineFragment off'} >
+              <label>Extension:</label>
+              <input className='numberInput' type='number' max='20' value={extensionScore} onChange={this.handleChangeExtension.bind(this)}/>
+            </div>
             <div className='headlineFragment' >
               <label>Sequence 1:</label>
               <input className='textInput' type="text"  maxLength='500' spellCheck="false" value={seq1} onChange={this.handleChangeSeq1.bind(this)} />
@@ -208,15 +267,13 @@ export class Allignment extends Component {
           <div className='statsWrapper'>
             <button className='statsButton'  onClick={() => this.handleShowAllignments()} />
             <div className={showAllignments ? 'statsBar' : 'statsBar off'} >
-              <div>
-                <div className='scoreDiv'>
-                  <label>{'Score'}</label>
-                  <div className='rectangle' >{score}</div>
-                </div>
-                <div className='scoreDiv'>
-                  <label>{'Allignments'}</label>
-                <div className='rectangle' >{allignmentList.length}</div>
+              <div className='scoreDiv'>
+                <label>{'Score'}</label>
+                <div className='rectangle' >{score}</div>
               </div>
+              <div className='scoreDiv'>
+                <label>{'show Allignments'}</label>
+                <div className='rectangle' >{allignmentList.length}</div>
               </div>
               <Allignments allignmentList={allignmentList} showAllignments={showAllignments}/>
             </div>
@@ -247,8 +304,10 @@ export class Allignment extends Component {
                 <button className={realTime ? 'rectangle disabled' : 'rectangle'} onClick={() => this.handleRenderClick()}>{'Render'}</button>
               </div>
               <div className='switchContainer'>
-                <button className='rectangle' onClick={() => this.handleRandomDNAClick()}>{'random DNA'}</button>
-                <button className='rectangle' onClick={() => this.handleRandomAAClick()}>{'random AA'}</button>
+                <button className='rectangle' onClick={() => this.handleRandomDNAClick()}>{'rDNA'}</button>
+                <button className='rectangle' onClick={() => this.handleRandomDNASquareClick()}>{'rDNA²'}</button>
+                <button className='rectangle' onClick={() => this.handleRandomAAClick()}>{'rAA'}</button>
+                <button className='rectangle' onClick={() => this.handleRandomAASquareClick()}>{'rAA²'}</button>
               </div>
             </div>
           </div>
