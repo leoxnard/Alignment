@@ -1,4 +1,4 @@
-import { getTraceArray, getAllAllignments, getAllignment } from "../HelpFunctions/AlgorithmHelpers";
+import { getAllAllignments, getAllignment } from "../HelpFunctions/AlgorithmHelpers";
 
 export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extensionScore, showAllAllignments) {
   const seq1Length = seq1.length;
@@ -11,16 +11,13 @@ export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extension
   const m_matrix = new Array(matricesLength * 2).fill(-Infinity, 0, matricesLength).fill(0, matricesLength, matricesLength * 2);
   const ix_matrix = new Array(matricesLength * 2).fill(-Infinity, 0, matricesLength).fill(0, matricesLength, matricesLength * 2);
   const iy_matrix = new Array(matricesLength * 2).fill(-Infinity, 0, matricesLength).fill(0, matricesLength, matricesLength * 2);
-  // const m_traceback = new Array(matricesLength).fill(0);
-  // const ix_traceback = new Array(matricesLength).fill(0);
-  // const iy_traceback = new Array(matricesLength).fill(0);
 
   m_matrix[seq1Length + 3] = 0;
 
   //first rows
   for (let i = 1; i <= seq1Length; i++){
     ix_matrix[seq1Length + 3 + i] = gapScore + (i - 1) * extensionScore;
-    ix_matrix[matricesLength + seq1Length + 3 + i] = 2;
+    ix_matrix[matricesLength + seq1Length + 3 + i] = 3;
     scores[seq1Length + 3 + i] = gapScore + (i - 1) * extensionScore;
     if (i === 1) {
       ix_matrix[matricesLength + seq1Length + 4] = 1;
@@ -30,12 +27,15 @@ export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extension
   //first columns
   for (let j=1; j <= seq2Length; j++){
     iy_matrix[(seq1Length + 2) * (j + 1) + 1] = gapScore + (j - 1) * extensionScore;
-    iy_matrix[matricesLength + ((seq1Length + 2) * (j + 1)) + 1] = 3;
+    iy_matrix[matricesLength + ((seq1Length + 2) * (j + 1)) + 1] = 2;
     scores[(seq1Length + 2) * (j + 1) + 1] = gapScore + (j - 1) * extensionScore;
     if (j === 1) {
       iy_matrix[matricesLength + seq1Length + 4] = 1;
     }
   }
+
+  if (scores[(seq1Length + 2) * 2 - 1] > 0) {maxScores = [(seq1Length + 2) * 2 - 1];}
+  else if (scores[(seq1Length + 2) * 2 - 1] < 0) {minScore = (seq1Length + 2) * 2 - 1;}
 
   let score1, score2, score3, addScore;
 
@@ -45,8 +45,8 @@ export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extension
       addScore = seq1[pos % (seq1Length+2) - 2] === seq2[Math.floor(pos / (seq1Length + 2)) - 2] ? matchScore : mismatchScore
 
       score1 = m_matrix[(pos - (seq1Length + 3))] + addScore;
-      score2 = ix_matrix[(pos - (seq1Length + 3))] + addScore;
-      score3 = iy_matrix[(pos - (seq1Length + 3))] + addScore;
+      score2 = iy_matrix[(pos - (seq1Length + 3))] + addScore;
+      score3 = ix_matrix[(pos - (seq1Length + 3))] + addScore;
       m_matrix[pos] = Math.max(score1, score2, score3);
       if (m_matrix[pos] === score1) {
         m_matrix[matricesLength + pos] = 1; // d1
@@ -70,72 +70,82 @@ export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extension
         }
       }
 
-      score1 = m_matrix[pos - 1] + gapScore;
-      score2 = ix_matrix[pos - 1] + extensionScore;
-      ix_matrix[pos] = Math.max(score1, score2);
-      if (ix_matrix[pos] === score1) {
-        ix_matrix[matricesLength + pos] = 1; // v1
-      }
-      if (ix_matrix[pos] === score2) {
-        if (ix_matrix[matricesLength + pos] === 0) {
-          ix_matrix[matricesLength + pos] = 2; // v2
-        } else {
-          ix_matrix[matricesLength + pos] = 3; // v12
-        }
-      }
-
       score1 = m_matrix[pos - (seq1Length + 2)] + gapScore;
       score2 = iy_matrix[pos - (seq1Length + 2)] + extensionScore;
       iy_matrix[pos] = Math.max(score1, score2);
       if (iy_matrix[pos] === score1) {
-        iy_matrix[matricesLength + pos] = 1; // h1
+        iy_matrix[matricesLength + pos] = 1; // v1
       }
       if (iy_matrix[pos] === score2) {
         if (iy_matrix[matricesLength + pos] === 0) {
-          iy_matrix[matricesLength + pos] = 2; // h2
+          iy_matrix[matricesLength + pos] = 2; // v2
         } else {
-          iy_matrix[matricesLength + pos] = 3; // h12
+          iy_matrix[matricesLength + pos] = 4; // v12
         }
       }
 
-      // scores[pos] = Math.max(m_matrix[pos], ix_matrix[pos], iy_matrix[pos]);
-      // if (scores[pos] === m_matrix[pos]) {
-      //   traceback[pos] = [1, m_matrix[matricesLength + pos] ]; // d
-      // }
-      // if (scores[pos] ===  iy_matrix[pos]) {
-      //   if (traceback[pos] === 0) {
-      //     traceback[pos] = [2, iy_matrix[matricesLength + pos] ]; // v
-      //   } else {
-      //     traceback[pos] = [4, traceback[pos][1], iy_matrix[matricesLength + pos] ]; // dv
-      //   }
-      // }
-      // if (scores[pos] === ix_matrix[pos]) {
-      //   if (traceback[pos] === 0) {
-      //     traceback[pos] = [3, ix_matrix[matricesLength + pos] ]; // h
-      //   } else if (traceback[pos] === 1) {
-      //     traceback[pos] = [5, traceback[pos][1], ix_matrix[matricesLength + pos] ]; // dh
-      //   } else if (traceback[pos] === 2) {
-      //     traceback[pos] = [6, traceback[pos][1], ix_matrix[matricesLength + pos] ]; // vh
-      //   } else {
-      //     traceback[pos] = [7, traceback[pos][1], traceback[pos][2], ix_matrix[matricesLength + pos] ]; // vdh
-      //   }
-      // }
-      
+      score1 = m_matrix[pos - 1] + gapScore;
+      score2 = ix_matrix[pos - 1] + extensionScore;
+      ix_matrix[pos] = Math.max(score1, score2);
+      if (ix_matrix[pos] === score1) {
+        ix_matrix[matricesLength + pos] = 1; // h1
+      }
+      if (ix_matrix[pos] === score2) {
+        if (ix_matrix[matricesLength + pos] === 0) {
+          ix_matrix[matricesLength + pos] = 3; // h2
+        } else {
+          ix_matrix[matricesLength + pos] = 5; // h12
+        }
+      }
+
+      scores[pos] = Math.max(m_matrix[pos], iy_matrix[pos], ix_matrix[pos]);
+      if (scores[pos] > scores[maxScores[0]]) {maxScores = [pos];}
+      else if (scores[pos] === scores[maxScores[0]]) {maxScores.push(pos)}
+      else if (scores[pos] < scores[minScore]) {minScore = pos;}
     }
   }
-  console.table(m_matrix)   
-  console.table(ix_matrix)   
+  console.log('m_matrix:')
+  console.table(m_matrix)
+  console.log('iy_matrix:')   
   console.table(iy_matrix)   
+  console.log('ix_matrix:')   
+  console.table(ix_matrix)
 
-  // if (scores[pos] > scores[maxScores[0]]) {
-  //   maxScores = [pos];
-  // } else if (scores[pos] === scores[maxScores[0]]) {
-  //   maxScores.push(pos);
-  // } else if (scores[pos] < scores[minScore]) {
-  //   minScore = pos;
-  // }
+  const array = new Array(traceback.length).fill(0);
+  const gonnaVisit = new Array(traceback.length).fill(0);
+  const maxStart = Math.max(m_matrix[matricesLength - 1], ix_matrix[matricesLength - 1], iy_matrix[matricesLength - 1]);
+  scores[matricesLength - 1] = maxStart;
+  // Start hash
+  if (maxStart === m_matrix[matricesLength - 1]) {gonnaVisit[matricesLength - 1] = 1;} // m
+  if (maxStart === iy_matrix[matricesLength - 1]) {
+    if (gonnaVisit[matricesLength - 1] === 0) {gonnaVisit[matricesLength - 1] = 2} // y
+    else {gonnaVisit[matricesLength - 1] = 4} // m y
+  }
+  if (maxStart === ix_matrix[matricesLength - 1]) {
+    if (gonnaVisit[matricesLength - 1] === 0) {gonnaVisit[matricesLength - 1] = 3} // x
+    else if (gonnaVisit[matricesLength - 1] === 1) {gonnaVisit[matricesLength - 1] = 5} // m x
+    else if (gonnaVisit[matricesLength - 1] === 2) {gonnaVisit[matricesLength - 1] = 6} // y x
+    else {gonnaVisit[matricesLength - 1] = 7} // m y x
+  }
 
-  const array = getTraceArray(traceback, seq1Length, [matricesLength - 1]);
+  // All hashes
+  for (let pos = traceback.length - 1; pos >= seq1Length + 4; pos--) {
+    console.log('gonnaVisit:')
+    console.table(gonnaVisit)
+    array[pos] = gonnaVisit[pos];
+    if ([1, 4, 5, 7].includes(gonnaVisit[pos])) {
+      gonnaVisit[pos - (seq1Length + 2) - 1] = m_matrix[matricesLength + pos];
+    }
+    if ([2, 4, 6, 7].includes(gonnaVisit[pos])) {
+      gonnaVisit[pos - (seq1Length + 2)] = iy_matrix[matricesLength + pos];
+    }
+    if ([3, 5, 6, 7].includes(gonnaVisit[pos])) {
+      gonnaVisit[pos - 1] = ix_matrix[matricesLength + pos];
+    }
+  }
+  console.log('array:')
+  console.table(array)
+
   let allignments;
   if (showAllAllignments) {
     allignments = getAllAllignments(array, seq1, seq2, matricesLength - 1, seq1Length - 1, seq2Length - 1);
@@ -143,7 +153,7 @@ export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extension
     allignments = getAllignment(array, seq1, seq2, matricesLength - 1, seq1Length - 1, seq2Length - 1);
   }
   allignments = allignments.map(subArray => subArray.map(str => str.split('').reverse().join('')));
-  //console.table(array)
+  
   //console.table(scores)
   return([scores, minScore, maxScores, array, allignments, scores[matricesLength - 1]]);
 }

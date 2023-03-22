@@ -10,12 +10,12 @@ export class Allignment extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      seq1: '',
-      seq2: '',
+      seq1: 'TTT',
+      seq2: 'T',
       scoreMatrix: [0,0,0,0],
       tracebackMatrix: [0,0,0,0],
       allignmentList: [],
-      gapScore: '-1',
+      gapScore: '-2',
       extensionScore: '-1',
       mismatchScore: '-1',
       matchScore: '1',
