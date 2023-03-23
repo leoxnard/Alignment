@@ -147,8 +147,9 @@ input::-webkit-outer-spin-button {
     padding: 10px;
 }
 
-.selectAlgorithm {
+.selectObject {
     background-color: #4f4f4f;
+    width: 230px;
     color: #ffffff;
     font-size: 15px;
     margin: 10px;
@@ -160,11 +161,11 @@ input::-webkit-outer-spin-button {
     appearance: none;
 }
 
-.selectAlgorithm:hover {
+.selectObject:hover {
     background-color: #626262;
 }
 
-.selectAlgorithm:focus {
+.selectObject:focus {
     outline: none;
 }
 
@@ -191,7 +192,6 @@ input::-webkit-outer-spin-button {
     display: inline-flex;
     align-items: center;
     font-size: 15px;
-
 }
 
 .disabled {

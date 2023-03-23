@@ -31,7 +31,6 @@ export function getAllignment(array, seq1, seq2, arrayPos, seq1Pos_, seq2Pos_) {
 }
 
 export function getAllAllignments(array, seq1, seq2, arrayPos, seq1Pos, seq2Pos) {
-  console.log('x')
   const seq1Length = seq1.length
   if (array[arrayPos] === 1) {
     return (

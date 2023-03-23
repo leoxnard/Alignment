@@ -24,6 +24,7 @@ export class Allignment extends Component {
       score: 0,
       minimalistic: false,
       algorithm: 0,
+      substitutionsMatrix: 0,
       realTime: true,
       scale: 1,
       showAllignments: false,
@@ -33,7 +34,7 @@ export class Allignment extends Component {
 
   computeAllignment() {
     if (!(isNaN(parseInt(this.state.matchScore)) || isNaN(parseInt(this.state.mismatchScore)) || isNaN(parseInt(this.state.gapScore)) || (isNaN(parseInt(this.state.extensionScore)) && this.state.algorithm === 3))){
-      const [scoreMatrix, minScore, maxScores, tracebackMatrix, allignmentList, score] = computeScores(this.state.seq1, this.state.seq2, parseInt(this.state.matchScore), parseInt(this.state.mismatchScore), parseInt(this.state.gapScore), parseInt(this.state.extensionScore), this.state.algorithm, this.state.showAllAllignments);
+      const [scoreMatrix, minScore, maxScores, tracebackMatrix, allignmentList, score] = computeScores(this.state.seq1, this.state.seq2, parseInt(this.state.matchScore), parseInt(this.state.mismatchScore), parseInt(this.state.gapScore), parseInt(this.state.extensionScore), this.state.substitutionsMatrix, this.state.algorithm, this.state.showAllAllignments);
       this.setState({scoreMatrix: scoreMatrix, tracebackMatrix: tracebackMatrix, minScore: minScore, maxScores: maxScores, allignmentList: allignmentList, score: score});
     }
   }
@@ -126,7 +127,15 @@ export class Allignment extends Component {
     }
     this.setState({algorithm: parseInt(e.target.value)});
   }
-
+  
+  handleSelectSubstitutionsMatrixChange(e) {
+    if (this.state.realTime){
+      this.setState({substitutionsMatrix: parseInt(e.target.value)}, () => {this.computeAllignment();});
+      return;
+    }
+    this.setState({substitutionsMatrix: parseInt(e.target.value)});
+  }
+  
   handleRandomAAClick() {
     if (this.state.minimalistic){
       const seq1 = randomAASequence(Math.floor(window.innerWidth) / (this.state.scale * 10) - (6 / this.state.scale));
@@ -232,20 +241,20 @@ export class Allignment extends Component {
   }
 
   render() {
-    const { seq1, seq2, matchScore, mismatchScore, gapScore, extensionScore, minimalistic, algorithm, scoreMatrix, tracebackMatrix, minScore, maxScores, scale, realTime, allignmentList, score, showAllignments, showAllAllignments } = this.state;
+    const { seq1, seq2, matchScore, mismatchScore, gapScore, extensionScore, minimalistic, algorithm, substitutionsMatrix, scoreMatrix, tracebackMatrix, minScore, maxScores, scale, realTime, allignmentList, score, showAllignments, showAllAllignments } = this.state;
     return (
       <Fragment>
         <div className='headlineContainer'>
           <div className='headline'>
-            <div className='headlineFragment' >
+            <div className={substitutionsMatrix === 0 ? 'headlineFragment' : 'headlineFragment off'} >
               <label>Match:</label>
               <input className='numberInput' type='number' step='any' max='20' value={matchScore} onChange={this.handleChangeMatch.bind(this)}/>
             </div>
-            <div className='headlineFragment' >
+            <div className={substitutionsMatrix === 0 ? 'headlineFragment' : 'headlineFragment off'} >
               <label>Mismatch:</label>
               <input className='numberInput' type='number' max='20' value={mismatchScore} onChange={this.handleChangeMismatch.bind(this)}/>
             </div>
-            <div className='headlineFragment' >
+            <div className={substitutionsMatrix === 0 ? 'headlineFragment' : 'headlineFragment off'} >
               <label>Gap:</label>
               <input className='numberInput' type='number' max='20' value={gapScore} onChange={this.handleChangeGap.bind(this)}/>
             </div>
@@ -281,11 +290,18 @@ export class Allignment extends Component {
           <div className='settingsWrapper'>
             <button className='settingButton' />
             <div className='sideBar'> 
-              <select className='selectAlgorithm' value={algorithm} onChange={this.handleSelectAlgorithmChange.bind(this)} >
+              <select className='selectObject' value={algorithm} onChange={this.handleSelectAlgorithmChange.bind(this)} >
                 <option value={0}> Needleman-Wunsch </option>
                 <option value={1}> Needleman-Wunsch-Linear </option>
                 <option value={2}> Smith-Waterman </option>
                 <option value={3}> Gotoh </option>
+              </select>
+              <select className='selectObject' value={substitutionsMatrix} onChange={this.handleSelectSubstitutionsMatrixChange.bind(this)} >
+                <option value={0}> Custom </option>
+                <option value={1}> Blosum45 (AA) </option>
+                <option value={2}> Blosum50 (AA) </option>
+                <option value={3}> Blosum62 (AA) </option>
+                <option value={4}> Blosum80 (AA) </option>
               </select>
               <button className='switchContainer' onClick={() => this.handleMiniClick()}>
                 <div className={minimalistic ? 'rectangle disabled' : 'rectangle'}>{'Regular'}</div>

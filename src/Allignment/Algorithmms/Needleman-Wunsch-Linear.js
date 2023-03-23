@@ -1,9 +1,10 @@
 import { getAllAllignments, getAllignment } from "../HelpFunctions/AlgorithmHelpers";
+import { substitutionsMatrixScore } from "./Substitutionsmatrices";
 
-export function NeedlemanWunschLinear(seq1, seq2, matchScore, mismatchScore, gapScore, showAllAllignments) {
+export function NeedlemanWunschLinear(seq1, seq2, matchScore, mismatchScore, gapScore, substitutionsMatrix, showAllAllignments) {
   if (seq1.length === 0 && seq2.length === 0) { return([['','','',''], 3, 3, [0,0,0,0]]);}
   const matrixLength = (seq1.length + 2) * (seq2.length + 2);
-  const coordinates = [[0, 0, 3], ...getCoordinates(matchScore, mismatchScore, gapScore, seq1, seq2, 0, seq1.length, 0, seq2.length)];
+  const coordinates = [[0, 0, 3], ...getCoordinates(matchScore, mismatchScore, gapScore, substitutionsMatrix, seq1, seq2, 0, seq1.length, 0, seq2.length)];
   const tracebackMatrix = new Array(matrixLength).fill(0);
   for (let i = 0; i < coordinates.length; i++) {
     const [x, y, direction] = coordinates[i];
@@ -23,10 +24,10 @@ export function NeedlemanWunschLinear(seq1, seq2, matchScore, mismatchScore, gap
     allignments = getAllignment(tracebackMatrix, seq1, seq2, matrixLength - 1, seq1.length - 1, seq2.length - 1);
   }
   const allignmentsRev = allignments.map(subArray => subArray.map(str => str.split('').reverse().join('')));
-  return ([ new Array(matrixLength).fill(''), 0, 0, tracebackMatrix, allignmentsRev, getScoreLinear(matchScore, mismatchScore, gapScore, seq1, seq2) ]);
+  return ([ new Array(matrixLength).fill(''), 0, 0, tracebackMatrix, allignmentsRev, getScoreLinear(matchScore, mismatchScore, gapScore, substitutionsMatrix, seq1, seq2) ]);
 }
 
-function getCoordinates(matchScore, mismatchScore, gapScore, seq1, seq2, seq1Start, seq1End, seq2Start, seq2End) {
+function getCoordinates(matchScore, mismatchScore, gapScore, substitutionsMatrix, seq1, seq2, seq1Start, seq1End, seq2Start, seq2End) {
   const columnLength = (seq2End - seq2Start + 1);
   const rowLength = (seq1End - seq1Start + 1);
   if (rowLength === 1) {
@@ -48,7 +49,7 @@ function getCoordinates(matchScore, mismatchScore, gapScore, seq1, seq2, seq1Sta
     const scores = [0, gapScore, gapScore, 0];
 
     //fülle element
-    const diagonalScore = (seq2[seq2End] === seq1[seq1End] ? matchScore : mismatchScore);
+    const diagonalScore = substitutionsMatrixScore(substitutionsMatrix, seq1[seq1End], seq2[seq2End], matchScore, mismatchScore);
     const verticalScore = scores[2] + gapScore;
     const horizontalScore = scores[1] + gapScore;
     scores[3] = Math.max(diagonalScore, verticalScore, horizontalScore);
@@ -77,7 +78,7 @@ function getCoordinates(matchScore, mismatchScore, gapScore, seq1, seq2, seq1Sta
 
     //fülle rest auf
     for (let y = 1; y < columnLength; y++) {
-      const diagonalScore = scores[y - 1] + (seq2[seq2Start + y - 1] === seq1[seq1End - 1] ? matchScore : mismatchScore);
+      const diagonalScore = scores[y - 1] + substitutionsMatrixScore(substitutionsMatrix, seq1[seq1End - 1], seq2[seq2Start + y - 1], matchScore, mismatchScore);;
       const verticalScore = scores[columnLength + y - 1] + gapScore;
       const horizontalScore = scores[y] + gapScore;
       scores[columnLength + y] = Math.max(diagonalScore, verticalScore, horizontalScore);
@@ -129,7 +130,7 @@ function getCoordinates(matchScore, mismatchScore, gapScore, seq1, seq2, seq1Sta
     
     //fülle rest auf
     for (let x = 1; x < rowLength; x++) {
-      const diagonalScore = scores[x - 1] + (seq2[seq2End - 1] === seq1[x - 1] ? matchScore : mismatchScore);
+      const diagonalScore = scores[x - 1] + substitutionsMatrixScore(substitutionsMatrix, seq1[x - 1], seq2[seq2End - 1], matchScore, mismatchScore);;
       const verticalScore = scores[x] + gapScore;
       const horizontalScore = scores[rowLength + x - 1] + gapScore;
       scores[rowLength + x] = Math.max(diagonalScore, verticalScore, horizontalScore);
@@ -182,7 +183,7 @@ function getCoordinates(matchScore, mismatchScore, gapScore, seq1, seq2, seq1Sta
     for (let x = seq1Start; x < m; x++) {
       scores[columnLength] = scores[0] + gapScore;
       for (let y = 1; y < columnLength; y++) {
-        const diagonalScore = scores[y - 1] + (seq2[seq2Start + y - 1] === seq1[x] ? matchScore : mismatchScore);
+        const diagonalScore = scores[y - 1] + substitutionsMatrixScore(substitutionsMatrix, seq1[x], seq2[seq2Start + y - 1], matchScore, mismatchScore);;
         const verticalScore = scores[columnLength + y - 1] + gapScore;
         const horizontalScore = scores[y] + gapScore;
         scores[columnLength + y] = Math.max(diagonalScore, verticalScore, horizontalScore);
@@ -196,7 +197,7 @@ function getCoordinates(matchScore, mismatchScore, gapScore, seq1, seq2, seq1Sta
     for (let x = m; x < seq1End; x++) {
       scores[columnLength] = scores[0] + gapScore;
       for (let y = 1; y < columnLength; y++) {
-        const diagonalScore = scores[y - 1] + (seq2[seq2Start + y - 1] === seq1[x] ? matchScore : mismatchScore);
+        const diagonalScore = scores[y - 1] + substitutionsMatrixScore(substitutionsMatrix, seq1[x], seq2[seq2Start + y - 1], matchScore, mismatchScore);;
         const verticalScore = scores[columnLength + y - 1] + gapScore;
         const horizontalScore = scores[y] + gapScore;
         scores[columnLength + y] = Math.max(diagonalScore, verticalScore, horizontalScore);
@@ -218,7 +219,7 @@ function getCoordinates(matchScore, mismatchScore, gapScore, seq1, seq2, seq1Sta
   }
 }
 
-function getScoreLinear(matchScore, mismatchScore, gapScore, seq1, seq2) {
+function getScoreLinear(matchScore, mismatchScore, gapScore, substitutionsMatrix, seq1, seq2) {
   const columnLength = seq2.length + 1;
   const scores = new Array(2 * columnLength).fill(0);
 
@@ -230,7 +231,7 @@ function getScoreLinear(matchScore, mismatchScore, gapScore, seq1, seq2) {
   for (let x = 1; x < seq1.length; x++) {
     scores[columnLength] = scores[0] + gapScore;
     for (let y = 1; y < columnLength; y++) {
-      const diagonalScore = scores[y - 1] + (seq2[y - 1] === seq1[x] ? matchScore : mismatchScore);
+      const diagonalScore = scores[y - 1] + substitutionsMatrixScore(substitutionsMatrix, seq1[x], seq2[y - 1], matchScore, mismatchScore);;
       const verticalScore = scores[columnLength + y - 1] + gapScore;
       const horizontalScore = scores[y] + gapScore;
       scores[columnLength + y] = Math.max(diagonalScore, verticalScore, horizontalScore);

@@ -1,6 +1,7 @@
 import { getAllignment, getAllAllignments, getTraceArray } from "../HelpFunctions/AlgorithmHelpers";
+import { substitutionsMatrixScore } from "./Substitutionsmatrices";
 
-export function SmithWaterman(seq1, seq2, matchScore, mismatchScore, gapScore, showAllAllignments) {
+export function SmithWaterman(seq1, seq2, matchScore, mismatchScore, gapScore, substitutionsMatrix, showAllAllignments) {
   const seq1Length = seq1.length;
   const seq2Length = seq2.length;
   let maxScores = [seq1Length + 3];
@@ -11,7 +12,7 @@ export function SmithWaterman(seq1, seq2, matchScore, mismatchScore, gapScore, s
   //rekursion
   for (let pos = (seq1Length + 3) * 2; pos <= matricesLength; pos++){
     if (!( (pos % (seq1Length + 2) === 0) || (pos % (seq1Length + 2) === 1) )){
-      const diagonalScore = scores[(pos - (seq1Length + 3))] + ((seq1[pos % (seq1Length+2) - 2] === seq2[Math.floor(pos / (seq1Length + 2)) - 2]) ? matchScore : mismatchScore);
+      const diagonalScore = scores[(pos - (seq1Length + 3))] + substitutionsMatrixScore(substitutionsMatrix, seq1[pos % (seq1Length + 2) - 2], seq2[Math.floor(pos / (seq1Length + 2)) - 2], matchScore, mismatchScore);
       const verticalScore = scores[pos - (seq1Length + 2)] + gapScore;
       const horizontalScore = scores[pos - 1] + gapScore;
       scores[pos] = Math.max(diagonalScore, verticalScore, horizontalScore, 0);

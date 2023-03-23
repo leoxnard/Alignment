@@ -1,6 +1,7 @@
 import { getAllAllignments, getAllignment } from "../HelpFunctions/AlgorithmHelpers";
+import { substitutionsMatrixScore } from "./Substitutionsmatrices";
 
-export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extensionScore, showAllAllignments) {
+export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extensionScore, substitutionsMatrix, showAllAllignments) {
   const seq1Length = seq1.length;
   const seq2Length = seq2.length;
   let maxScores = [seq1Length + 3];
@@ -42,7 +43,7 @@ export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extension
   //rekursion
   for (let pos = (seq1Length + 3) * 2; pos <= matricesLength; pos++){
     if (!( pos % (seq1Length+2) < 2 )){
-      addScore = seq1[pos % (seq1Length+2) - 2] === seq2[Math.floor(pos / (seq1Length + 2)) - 2] ? matchScore : mismatchScore
+      addScore = substitutionsMatrixScore(substitutionsMatrix, seq1[pos % (seq1Length + 2) - 2], seq2[Math.floor(pos / (seq1Length + 2)) - 2], matchScore, mismatchScore);
 
       score1 = m_matrix[(pos - (seq1Length + 3))] + addScore;
       score2 = iy_matrix[(pos - (seq1Length + 3))] + addScore;
