@@ -1,0 +1,16 @@
+.randomButtonsContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  background-color: var(--color-1);
+  grid-gap: 5px;
+  padding: 5px;
+}
+
+.randomButton {
+  height: calc(var(--box-size));
+  background-color: var(--color-2);
+  color: var(--text-color);
+  font-size: var(--font-size);
+  border: none;
+  padding: 5px;
+}

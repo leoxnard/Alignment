@@ -1,287 +1,60 @@
-.headlineContainer {
-    background-color: #282828;
-    margin: 0;
-    padding: 0;
-    display: block;
-    height: auto;
-    width: 100vw;
-    position: fixed;
-    justify-content: center;
-    z-index: 1;
-}
-
 .headline {
-    width: calc(100% - 140px);
-    padding: 10px;
-    margin: 0;
-    color: white;
-    display: flex;
-    font-size: medium;
-    position: relative;
-    z-index: 2;
-    display: flex;
-    gap: 10px;
-    overflow-x: scroll;
+  height: var(--headline-size);
+  width: calc(100% - 20px);
+  background-color: var(--color-1);
+  font-size: var(--font-size);
+  margin: 0;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
 }
 
 .headlineFragment {
-    margin-right: 0px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
+  height: calc(var(--headline-size) - 30px);
+  width: calc((100% - 120px)/2);
+  color: var(--text-color);
+  margin: 5px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
 }
 
-.statsWrapper label {
-    margin-left: 0px;
-}
-
-.numberInput,
-.textInput {
-    background-color: #4f4f4f;
-    margin-left: 10px;
-    padding: 7px;
-    height: 27px;
-    width: 350px;
-    font-size: 16px;
-    color: white;
-    border: none;
-}
-
-.numberInput:focus,
-.textInput:focus {
-    outline: none;
-}
-
-.counterSquare {
-    height: 27px;
-    background-color: #4f4f4f;
-    padding: 7px;
-    font-size: 13px;
-    color: #a6a6a6;
-    align-items: center;
-    display: flex;
-}
-
-.numberInput {
-    text-align: center;
-    height: 25px;
-    width: 25px;
-}
-
-@media screen and (max-width: 700px) {
-    .headline {font-size: small;}
-    .numberInput {height: 20px;}
-}
-
-input::-webkit-inner-spin-button,
-input::-webkit-outer-spin-button {
-    -webkit-appearance:none;
-}
-
-.button:hover {
-    background-color: #626262;
+.headlineLabel {
+  margin: 5px;
 }
 
 .statsButton,
-.settingButton {
-    height: 60px;
-    width: 60px;
-    justify-content: center;
-    display: flex;
-    align-items: center;
-    background-color: transparent;
-    background-image: url('./Icons/SettingButton.png');
-    background-repeat: no-repeat;
-    background-size: 30px 30px;
-    border: none;
-    z-index: 3;
+.settingsButton {
+  background-color: transparent;
+  opacity: 0.8;
+  background-image: url('./Icons/StatsButton.png');
+  transform: rotate(180deg);
+  background-size: calc(var(--headline-size) - 25px) calc(var(--headline-size) - 25px);
+  background-repeat: no-repeat;
+  background-position: center;
+  height: calc(var(--headline-size) - 20px);
+  width: calc(var(--headline-size) - 20px);
+  margin: 10px;
+  padding: 5px;
+  border: none;
+  display: inline-flex;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
-.statsButton {
-    background-image: url('./Icons/StatsButton.png');
-    background-position-x: center;
+.settingsButton {
+  background-image: url('./Icons/SettingsButton.png');
+  transform: rotate(90deg);
 }
 
-.statsWrapper,
-.settingsWrapper {
-    position: absolute;
-    display: inline-block;
-    right: 0px;
-    top: 15px;
-    z-index: 3;
+.statsButton:hover,
+.settingsButton:hover {
+  opacity: 1;
 }
 
-.statsWrapper {
-    right: 60px;
+.onClick {
+  opacity: 1;
+  transform: rotate(0deg);
 }
-
-.sideBar {
-    position: fixed;
-    top: 0px;
-    width: 250px;
-    right: 0px;
-    height: 100vh;
-    z-index: 10;
-    background-color: #373737;
-    color: #ffffff;
-    padding: 20px;
-    display: none;
-    overflow-y: scroll;
-}
-
-.settingsWrapper:hover .sideBar {
-    display:block;
-}
-
-.statsBar {
-    position: absolute;
-    right: -60px;
-    top: 45px;
-    width: calc(100vw - 20px);
-    max-height: calc(100vh - 80px);
-    z-index: 5;
-    background-color: #373737;
-    color: #ffffff;
-    display: block;
-    padding: 10px;
-}
-
-.selectObject {
-    background-color: #4f4f4f;
-    width: 230px;
-    color: #ffffff;
-    font-size: 15px;
-    margin: 10px;
-    padding: 10px;
-    border: solid 5px #282828;
-    border-radius: 0;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-}
-
-.selectObject:hover {
-    background-color: #626262;
-}
-
-.selectObject:focus {
-    outline: none;
-}
-
-.scoreDiv {
-    display: inline-flex;
-    align-items: center;
-    background-color: #282828;
-    padding-left: 10px;
-    padding-left: 10px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-    margin-right: 10px;
-}
-
-.rectangle {
-    background: #4f4f4f;
-    border: none;
-    height: auto;
-    width: auto;
-    margin: 10px;
-    padding: 10px;
-    color: white;
-    justify-content: center;
-    display: inline-flex;
-    align-items: center;
-    font-size: 15px;
-}
-
-.disabled {
-    background-color: #343434;
-    color: #7e7e7e;
-}
-
-.rectangle .disabled:hover {
-    background-color: #000000;
-}
-
-.rectangle:hover {
-    background-color: #626262;
-}
-
-.sideBar label, .sideBar button , .sideBar div{
-    margin: 10px;
-}
-
-.slideContainer {
-    align-items: center;
-    display: flex;
-}
-
-.switchContainer {
-    border: none;
-    background-color: #282828;
-    padding: 2.5px;
-    display: inline-flex;
-    width: auto;
-}
-
-.switchContainer .rectangle {
-    display:inline-flex;
-    margin: 2.5px;
-}
-
-.slider {
-    appearance: none;
-    width: 150px;
-    height: 25px;
-    background: #656565;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-    margin: 10px;
-}
-  
-.slider:hover {
-    opacity: 1;
-}
-  
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    background: #858585;
-    cursor: pointer;
-}
-  
-.slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    background: #858585;
-    cursor: pointer;
-}
-
-.off {
-    display: none;
-}
-
-@media screen and (min-width: 1560px) {
-    .headline {justify-content: center;}
-}
-
-@media screen and (max-width: 1000px) {
-    .textInput {width: 250px;}
-}
-
-@media screen and (max-width: 800px) {
-    .textInput {width: 100px;}
-}
-
-@media screen and (max-width: 400px) {
-    .textInput {width: 50px;}
-}
-
-.sideBar::-webkit-scrollbar,
-.headline::-webkit-scrollbar {
-    display: none;
-  }

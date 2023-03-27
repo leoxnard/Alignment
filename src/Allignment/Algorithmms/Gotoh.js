@@ -24,6 +24,9 @@ export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extension
       ix_matrix[matricesLength + seq1Length + 4] = 1;
     }
   }
+
+  if (scores[(seq1Length + 2) * 2 - 1] > 0) {maxScores = [(seq1Length + 2) * 2 - 1];}
+  else if (scores[(seq1Length + 2) * 2 - 1] < 0) {minScore = (seq1Length + 2) * 2 - 1;}
   
   //first columns
   for (let j=1; j <= seq2Length; j++){
@@ -35,8 +38,9 @@ export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extension
     }
   }
 
-  if (scores[(seq1Length + 2) * 2 - 1] > 0) {maxScores = [(seq1Length + 2) * 2 - 1];}
-  else if (scores[(seq1Length + 2) * 2 - 1] < 0) {minScore = (seq1Length + 2) * 2 - 1;}
+  if (scores[(seq1Length + 2) * 2 - 1] > scores[maxScores[0]]) {maxScores = [(seq1Length + 2) * (seq2Length + 1) + 1];}
+  else if (scores[(seq1Length + 2) * (seq2Length + 1) + 1] === scores[maxScores[0]]) {maxScores.push((seq1Length + 2) * (seq2Length + 1) + 1);}
+  else if (scores[(seq1Length + 2) * (seq2Length + 1) + 1] < scores[minScore]) {minScore = (seq1Length + 2) * (seq2Length + 1) + 1;}
 
   let score1, score2, score3, addScore;
 

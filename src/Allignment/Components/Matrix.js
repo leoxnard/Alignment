@@ -1,71 +1,83 @@
-import React, { Component } from 'react'
-import {getLevel} from '../HelpFunctions/helpers'
+import React, { useMemo } from 'react'
+import {getScoreLevel} from '../HelpFunctions/helpers'
+import '../CSS/Matrix.css'
 
 function Square(props) {
-    return(
-        <>
-            <button className={props.buttonClassName}>
-                {props.value}
-                <div className={props.arrowClassName} />
-            </button>
-        </>
-    )
+  return(
+    <div className={props.buttonClassName}>
+        {props.value}
+      <div className={props.arrowClassName} />
+    </div>
+  )
 }
-  
-export default class Matrix extends Component {
-    getScoreLevel(i) {
-        const range = this.props.scoreMatrix[this.props.maxScores[0]] - this.props.scoreMatrix[this.props.minScore];
-        const value = this.props.scoreMatrix[i] - this.props.scoreMatrix[this.props.minScore];
-        return getLevel(value, range);
+
+function Matrix(props) {
+  const { seq1, seq2, scoreMatrix, tracebackMatrix, minScore, maxScores, minimalistic } = props;
+  const squares = useMemo(() => {
+    //console.log('rerender')
+    let squares = [];
+    for (let i=0; i <= scoreMatrix.length - 1; i++){
+      let buttonClassName = 'square';
+      let traceType = 'arrow';
+      if (minimalistic) {
+        traceType = 'line';
+      }
+        traceType += tracebackMatrix[i].toString();
+
+      if (minimalistic) {
+          if (i <= seq1.length + 1 || i % (seq1.length + 2)  === 0) {
+            continue;
+          }
+          if (i === 1 || i === seq1.length + 2) {
+            squares.push(<Square buttonClassName={buttonClassName} key={i} />);
+            continue;
+          }
+          if (i < seq1.length + 2) {
+            squares.push(<Square buttonClassName={buttonClassName} key={i} />)
+            continue;
+          }
+          if (i % (seq1.length + 2) === 0) {
+            squares.push(<Square buttonClassName={buttonClassName} key={i} />)
+            continue;
+          }
+          buttonClassName += getScoreLevel(i, scoreMatrix, minScore, maxScores);
+          squares.push(<Square buttonClassName={buttonClassName} arrowClassName={traceType} key={i} />)
+          continue;
+        }
+        if (i <= seq1.length + 1){
+          buttonClassName += ' first-row';
+        }
+        if (i % (seq1.length + 2)  === 0){
+          buttonClassName += ' first-col';
+        }
+      if (i === 1 || i === seq1.length + 2) {
+          squares.push(<Square value={'-'} buttonClassName={buttonClassName} key={i} />);
+          continue;
+      }
+      if (i < seq1.length + 2) {
+          squares.push(<Square value={seq1[i-2]} buttonClassName={buttonClassName} key={i} />)
+          continue;
+      }
+      if (i % (seq1.length + 2) === 0) {
+          squares.push(<Square value={seq2[i/(seq1.length + 2) - 2]} buttonClassName={buttonClassName} key={i} />)
+          continue;
+      }
+      buttonClassName += getScoreLevel(i, scoreMatrix, minScore, maxScores);
+      squares.push(<Square value={scoreMatrix[i]} buttonClassName={buttonClassName} arrowClassName={traceType} key={i} />)
     }
 
-    renderSquare (i){
-        let buttonClassName = 'square';
-        let traceType = 'arrow';
-        if (this.props.minimalistic) {
-            traceType = 'line';
-        }
-        if (i < this.props.tracebackMatrix.length) {
-            traceType += this.props.tracebackMatrix[i].toString();
-        }
-        
-        if (this.props.minimalistic) {
-            buttonClassName += ' mini';
-        } else {
-            if (i <= this.props.seq1.length + 1){
-                buttonClassName += ' first-row';
-            }
-            if (i % (this.props.seq1.length + 2)  === 0){
-                buttonClassName += ' first-col';
-            }
-        }
-        if (i === 1 || i === this.props.seq1.length + 2) {
-            return (<Square value={'-'} buttonClassName={buttonClassName} key={i} />)
-        }
-        if (i < this.props.seq1.length + 2) {
-            return (<Square value={this.props.seq1[i-2]} buttonClassName={buttonClassName} key={i} />)
-        }
-        if (i % (this.props.seq1.length + 2) === 0) {
-            return (<Square value={this.props.seq2[i/(this.props.seq1.length + 2) - 2]} buttonClassName={buttonClassName} key={i} />)
-        }
-        buttonClassName += this.getScoreLevel(i);
-        return (<Square value={this.props.scoreMatrix[i]} buttonClassName={buttonClassName} arrowClassName={traceType} key={i} />)
-    }
+    return squares;
+  }, [seq1, seq2, scoreMatrix, tracebackMatrix, minScore, maxScores, minimalistic]);
 
-    render () {
-        const rows = [];
-        for (let i=0; i <= this.props.seq2.length + 1; i++){
-            const squares = [];
-            for (let j = 0; j <= this.props.seq1.length + 1; j++) {
-                squares.push(this.renderSquare(i*(this.props.seq1.length + 2) + j));
-            }
-            rows.push(<div className='row' key={i}>{squares}</div>);
-        }
-
-        return (
+  return (
+    <div className='matrixContainer' >
+      <div className='matrixMask' style={{height: `${props.matrixHeight}px`, width: `${props.matrixWidth}px`}}>
         <div className='matrix'>
-            { rows }
+          { squares }
         </div>
-        )
-    }
+      </div>
+    </div>
+  )
 }
+
+export default React.memo(Matrix);

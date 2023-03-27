@@ -1,0 +1,29 @@
+.numberInputContainer {
+  height: calc(var(--box-size + 10px));
+  width: calc(var(--settingsBar-size) - 40px);
+  color: var(--text-color);
+  margin: 0px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.numberInput {
+  height: var(--box-size);
+  width: var(--box-size);
+  background-color: var(--color-2);
+  color: var(--text-color);
+  font-size: var(--font-size);
+  border: 5px solid var(--color-1);
+  margin-left: 5px;
+  padding: 0;
+  text-align: center;
+}
+
+.numberInput:focus {
+  outline: none;
+}
+
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+    -webkit-appearance:none;
+}

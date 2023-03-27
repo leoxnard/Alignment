@@ -1,339 +1,94 @@
-import React, { Component, Fragment } from 'react'
-import './CSS/Headline.css';
-import './CSS/Matrix.css';
-import {computeScores} from './Algorithmms/Algorithms'
-import {randomAASequence, randomDNASequence} from './HelpFunctions/helpers'
+import React, { useMemo, useState, Fragment, useEffect } from 'react'
+import { computeScores } from './Algorithmms/Algorithms'
 import Matrix from './Components/Matrix';
-import Allignments from './Components/Allignments';
+import { Headline } from './Components/Headline'
+import { TextInput } from './Components/TextInput';
+import { SettingsContainer, SettingsSlideContainer } from './Components/Settings';
+import { Select } from './Components/Select';
+import { Stats } from './Components/Stats';
+import { NumberInput } from './Components/NumberInput';
+import { Switch } from './Components/Switch';
+import { Slide } from './Components/Slide';
+import { RandomButtons } from './Components/RandomButtons';
 
-export class Allignment extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      seq1: '',
-      seq2: '',
-      scoreMatrix: [0,0,0,0],
-      tracebackMatrix: [0,0,0,0],
-      allignmentList: [],
-      gapScore: '-1',
-      extensionScore: '-1',
-      mismatchScore: '-1',
-      matchScore: '1',
-      maxScores: 4,
-      minScore: 4,
-      score: 0,
-      minimalistic: false,
-      algorithm: 0,
-      substitutionsMatrix: 0,
-      realTime: true,
-      scale: 1,
-      showAllignments: false,
-      showAllAllignments: false,
-    };
-  }
+export function Allignment() {
+  const [algorithm, setAlgorithm] = useState(0);
+  const [substitutionsMatrix, setSubstitutionsMatrix] = useState(0);
 
-  computeAllignment() {
-    if (!(isNaN(parseInt(this.state.matchScore)) || isNaN(parseInt(this.state.mismatchScore)) || isNaN(parseInt(this.state.gapScore)) || (isNaN(parseInt(this.state.extensionScore)) && this.state.algorithm === 3))){
-      const [scoreMatrix, minScore, maxScores, tracebackMatrix, allignmentList, score] = computeScores(this.state.seq1, this.state.seq2, parseInt(this.state.matchScore), parseInt(this.state.mismatchScore), parseInt(this.state.gapScore), parseInt(this.state.extensionScore), this.state.substitutionsMatrix, this.state.algorithm, this.state.showAllAllignments);
-      this.setState({scoreMatrix: scoreMatrix, tracebackMatrix: tracebackMatrix, minScore: minScore, maxScores: maxScores, allignmentList: allignmentList, score: score});
-    }
-  }
+  const [seq1, setSeq1] = useState('');
+  const [seq2, setSeq2] = useState('');
 
-  handleChangeSeq1(e) {
-    if (!this.state.realTime) {
-      this.setState({ seq1: e.target.value.toUpperCase() });
-      return;
-    }
-    if (e.target.value.length + this.state.seq2.length > 100) {
-      this.setState({ seq1:  e.target.value.toUpperCase(), showAllAllignments: false}, () => {this.computeAllignment();})
-      return;
-    }
-    this.setState({ seq1:  e.target.value.toUpperCase()}, () => {this.computeAllignment();})
-  }
+  const [matchScore, setMatchScore] = useState('1');
+  const [mismatchScore, setMismatchScore] = useState('-1');
+  const [gapScore, setGapScore] = useState('-1');
+  const [extensionScore, setExtensionScore] = useState('-1');
 
-  handleChangeSeq2(e) {
-    if (!this.state.realTime) {
-      this.setState({ seq2: e.target.value.toUpperCase() });
-      return;
-    }
-    if (e.target.value.length + this.state.seq1.length > 100) {
-      this.setState({ seq2:  e.target.value.toUpperCase(), showAllAllignments: false}, () => {this.computeAllignment();})
-      return;
-    }
-    this.setState({ seq2:  e.target.value.toUpperCase()}, () => {this.computeAllignment();})
-  }
+  const [scoreMatrix, setScoreMatrix] = useState([0,0,0,0]);
+  const [tracebackMatrix, setTracebackMatrix] = useState([0,0,0,0]);
+  const [allignmentList, setAllignmentList] = useState([]);
+  const [maxScores, setMaxScores] = useState(4);
+  const [minScore, setMinScore] = useState(4);
+  const [score, setScore] = useState(0);
 
-  handleChangeMatch(e) {
-    if (!this.state.realTime) {
-      this.setState({ matchScore: e.target.value });
-      return;
-    }
-    this.setState({ matchScore: e.target.value }, () => {this.computeAllignment();})
-  }
+  const [minimalistic, setMinimalistic] = useState(false);
+  const [scale, setScale] = useState(1);
+  const [showStats, setShowStats] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showAllAllignments, setShowAllAllignments] = useState(false);
 
-  handleChangeMismatch(e) {
-    if (!this.state.realTime) {
-      this.setState({ mismatchScore: e.target.value });
-      return;
-    }
-    this.setState({ mismatchScore: e.target.value }, () => {this.computeAllignment();})
-  }
-
-  handleChangeGap(e) {
-    if (!this.state.realTime) {
-      this.setState({ gapScore: e.target.value });
-      return;
-    }
-    this.setState({ gapScore: e.target.value }, () => {this.computeAllignment();})
+  const [matrixHeight, setMatrixHeight] = useState(0);
+  const [matrixWidth, setMatrixWidth] = useState(0);
   
-  }
-
-  handleChangeExtension(e) {
-    if (!this.state.realTime) {
-      this.setState({ extensionScore: e.target.value });
-      return;
+  useMemo(() => {
+    if (!(isNaN(parseInt(matchScore)) || isNaN(parseInt(mismatchScore)) || isNaN(parseInt(gapScore)) || (isNaN(parseInt(extensionScore)) && algorithm === 3))){
+      const [scoreMatrix_, minScore_, maxScores_, tracebackMatrix_, allignmentList_, score_] = computeScores(seq1, seq2, parseInt(matchScore), parseInt(mismatchScore), parseInt(gapScore), parseInt(extensionScore), substitutionsMatrix, algorithm, showAllAllignments);
+      setScoreMatrix(scoreMatrix_);
+      setTracebackMatrix(tracebackMatrix_);
+      setMinScore(minScore_);
+      setMaxScores(maxScores_);
+      setAllignmentList(allignmentList_);
+      setScore(score_);
     }
-    this.setState({ extensionScore: e.target.value }, () => {this.computeAllignment();})
-  }
+    document.documentElement.style.setProperty('--square-size', (minimalistic ? '10px' : '50px'));
+    document.documentElement.style.setProperty('--row-length', seq1.length + (minimalistic ? 1 : 2));
+  }, [seq1, seq2, gapScore, extensionScore, mismatchScore, matchScore, algorithm, substitutionsMatrix, showAllAllignments, minimalistic]);
 
-  handleMiniClick() {
-    if (this.state.minimalistic){
-      this.setState({minimalistic: false});
-      return;
-    }
-    this.setState({minimalistic: true});
-  }
-
-  handleRealTimeClick() {
-    if (this.state.realTime){
-      this.setState({realTime: false});
-      return;
-    }
-    this.setState({realTime: true}, () => {this.computeAllignment();})
-  }
-
-  handleRenderClick() {
-    if (!this.state.realTime) {
-      this.computeAllignment();
-    }
-  }
-
-  handleSelectAlgorithmChange(e) {
-    if (e.target.value === '3') {this.setState({gapScore: '-2', mismatchScore: '-2', matchScore: '2'});}
-    if (this.state.algorithm === 3) {this.setState({gapScore: this.state.extensionScore, mismatchScore: this.state.extensionScore, matchScore: (-1 * this.state.extensionScore)});}
-    if (this.state.realTime){
-      this.setState({algorithm: parseInt(e.target.value)}, () => {this.computeAllignment();});
-      return;
-    }
-    this.setState({algorithm: parseInt(e.target.value)});
-  }
+  useEffect(() => {
+    setMatrixWidth(minimalistic ? ((seq1.length) * 9.5 + 10) : ((seq1.length + 2) * 49.5 + 5));
+  }, [seq1, minimalistic])
   
-  handleSelectSubstitutionsMatrixChange(e) {
-    if (this.state.realTime){
-      this.setState({substitutionsMatrix: parseInt(e.target.value)}, () => {this.computeAllignment();});
-      return;
-    }
-    this.setState({substitutionsMatrix: parseInt(e.target.value)});
-  }
+  useEffect(() => {
+    setMatrixHeight(minimalistic ? ((seq2.length) * 9.5 + 10) : ((seq2.length + 2) * 49.5 + 5));
+  }, [seq2, minimalistic])
   
-  handleRandomAAClick() {
-    if (this.state.minimalistic){
-      const seq1 = randomAASequence(Math.floor(window.innerWidth) / (this.state.scale * 10) - (6 / this.state.scale));
-      const seq2 = randomAASequence(Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale));
-      if (seq1.length + seq2.length > 100) {
-        this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
-        return;
-      }
-      this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
-      return;
-    }
-    const seq1 = randomAASequence(Math.floor(window.innerWidth) / (this.state.scale * 51) - 3);
-    const seq2 = randomAASequence(Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))));
-    if (seq1.length + seq2.length > 100) {
-      this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
-      return;
-    }
-    this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
-  }
-
-  handleRandomAASquareClick() {
-    if (this.state.minimalistic){
-      const size = Math.min(Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale), Math.floor(window.innerWidth) / (this.state.scale * 10) - (6 / this.state.scale));
-      const seq1 = randomAASequence(size);
-      const seq2 = randomAASequence(size);
-      if (seq1.length + seq2.length > 100) {
-        this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
-        return;
-      }
-      this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
-      return;
-    }
-    const size_2 = Math.min(Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))), Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))));
-    const seq1 = randomAASequence(size_2);
-    const seq2 = randomAASequence(size_2);
-    if (seq1.length + seq2.length > 100) {
-      this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
-      return;
-    }
-    this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
-  }
-
-  handleRandomDNAClick() {
-    if (this.state.minimalistic){
-      const seq1 = randomDNASequence(Math.floor(window.innerWidth) / (this.state.scale * 10) - (6 / this.state.scale));
-      const seq2 = randomDNASequence(Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale));
-      if (seq1.length + seq2.length > 100) {
-        this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
-        return;
-      }
-      this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
-      return;
-    }
-    const seq1 = randomDNASequence(Math.floor(window.innerWidth) / (this.state.scale * 51) - 3);
-    const seq2 = randomDNASequence(Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))));
-    if (seq1.length + seq2.length > 100) {
-      this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
-      return;
-    }
-    this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
-  }
-
-  handleRandomDNASquareClick() {
-    if (this.state.minimalistic){
-      const size = Math.min(Math.floor(window.innerHeight * 1) / (this.state.scale * 11) - (4 / this.state.scale), Math.floor(window.innerWidth) / (this.state.scale * 10) - (6 / this.state.scale));
-      const seq1 = randomDNASequence(size);
-      const seq2 = randomDNASequence(size);
-      if (seq1.length + seq2.length > 100) {
-        this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
-        return;
-      }
-      this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
-      return;
-    }
-    const size_2 = Math.min(Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))), Math.floor(window.innerHeight / (this.state.scale * 50) - ((5*3) / (this.state.scale * 4))));
-    const seq1 = randomDNASequence(size_2);
-    const seq2 = randomDNASequence(size_2);
-    if (seq1.length + seq2.length > 100) {
-      this.setState({ seq1: seq1, seq2: seq2, showAllAllignments: false }, () => {this.computeAllignment();})
-      return;
-    }
-    this.setState({ seq1: seq1, seq2: seq2 }, () => {this.computeAllignment();})
-  }
-
-  handleScaleSlide(e) {
-    this.setState({ scale: e.target.value }, () => {document.documentElement.style.setProperty('--matrix-scale', e.target.value);})
-  }
-
-  handleShowAllignments() {
-    if (this.state.showAllignments) {
-      this.setState({ showAllignments: false });
-      return;
-    }
-    this.setState({ showAllignments: true });
-  }
-
-  handleShowAllAllignments() {
-    if (this.state.showAllAllignments ) {
-      this.setState({ showAllAllignments: false }, () => {this.computeAllignment();});
-      return;
-    }
-    this.setState({ showAllAllignments: true }, () => {this.computeAllignment();});
-  }
-
-  render() {
-    const { seq1, seq2, matchScore, mismatchScore, gapScore, extensionScore, minimalistic, algorithm, substitutionsMatrix, scoreMatrix, tracebackMatrix, minScore, maxScores, scale, realTime, allignmentList, score, showAllignments, showAllAllignments } = this.state;
-    return (
-      <Fragment>
-        <div className='headlineContainer'>
-          <div className='headline'>
-            <div className={substitutionsMatrix === 0 ? 'headlineFragment' : 'headlineFragment off'} >
-              <label>Match:</label>
-              <input className='numberInput' type='number' step='any' max='20' value={matchScore} onChange={this.handleChangeMatch.bind(this)}/>
-            </div>
-            <div className={substitutionsMatrix === 0 ? 'headlineFragment' : 'headlineFragment off'} >
-              <label>Mismatch:</label>
-              <input className='numberInput' type='number' max='20' value={mismatchScore} onChange={this.handleChangeMismatch.bind(this)}/>
-            </div>
-            <div className={substitutionsMatrix === 0 ? 'headlineFragment' : 'headlineFragment off'} >
-              <label>Gap:</label>
-              <input className='numberInput' type='number' max='20' value={gapScore} onChange={this.handleChangeGap.bind(this)}/>
-            </div>
-            <div className={algorithm === 3 ? 'headlineFragment' : 'headlineFragment off'} >
-              <label>Extension:</label>
-              <input className='numberInput' type='number' max='20' value={extensionScore} onChange={this.handleChangeExtension.bind(this)}/>
-            </div>
-            <div className='headlineFragment' >
-              <label>Sequence 1:</label>
-              <input className='textInput' type="text"  maxLength='500' spellCheck="false" value={seq1} onChange={this.handleChangeSeq1.bind(this)} />
-              <div className='counterSquare'>{seq1.length}</div>
-            </div>
-            <div className='headlineFragment' >
-              <label>Sequence 2:</label>
-              <input  className='textInput' type="text" maxLength='500' spellCheck="false" value={seq2} onChange={this.handleChangeSeq2.bind(this)} />
-              <div className='counterSquare'>{seq2.length}</div>
-            </div>
-          </div>
-          <div className='statsWrapper'>
-            <button className='statsButton'  onClick={() => this.handleShowAllignments()} />
-            <div className={showAllignments ? 'statsBar' : 'statsBar off'} >
-              <div className='scoreDiv'>
-                <label>{'Score'}</label>
-                <div className='rectangle' >{score}</div>
-              </div>
-              <div className='scoreDiv'>
-                <label>{'show Allignments'}</label>
-                <div className='rectangle' >{allignmentList.length}</div>
-              </div>
-              <Allignments allignmentList={allignmentList} showAllignments={showAllignments}/>
-            </div>
-          </div>
-          <div className='settingsWrapper'>
-            <button className='settingButton' />
-            <div className='sideBar'> 
-              <select className='selectObject' value={algorithm} onChange={this.handleSelectAlgorithmChange.bind(this)} >
-                <option value={0}> Needleman-Wunsch </option>
-                <option value={1}> Needleman-Wunsch-Linear </option>
-                <option value={2}> Smith-Waterman </option>
-                <option value={3}> Gotoh </option>
-              </select>
-              <select className='selectObject' value={substitutionsMatrix} onChange={this.handleSelectSubstitutionsMatrixChange.bind(this)} >
-                <option value={0}> Custom </option>
-                <option value={1}> Blosum45 (AA) </option>
-                <option value={2}> Blosum50 (AA) </option>
-                <option value={3}> Blosum62 (AA) </option>
-                <option value={4}> Blosum80 (AA) </option>
-              </select>
-              <button className='switchContainer' onClick={() => this.handleMiniClick()}>
-                <div className={minimalistic ? 'rectangle disabled' : 'rectangle'}>{'Regular'}</div>
-                <div className={minimalistic ? 'rectangle' : 'rectangle disabled'}>{'Minimalistic'}</div>
-              </button>
-              <button className='switchContainer' onClick={() => this.handleShowAllAllignments()}>
-                <div className={showAllAllignments ? 'rectangle disabled' : 'rectangle'}>{'one result'}</div>
-                <div className={showAllAllignments ? 'rectangle' : 'rectangle disabled'}>{'all results.'}</div>
-              </button>
-              <div className='slideContainer'>
-                <label className='sideBarLabel'>Scale:</label>
-                <input type='range' min='0.3' max='1' step='0.1' className='slider' value={scale} onChange={(e) => this.handleScaleSlide(e)}/>
-              </div>
-              <div className='switchContainer'>
-                <button className={realTime ? 'rectangle' : 'rectangle disabled'} onClick={() => this.handleRealTimeClick()}>{'Live-Render'}</button>
-                <button className={realTime ? 'rectangle disabled' : 'rectangle'} onClick={() => this.handleRenderClick()}>{'Render'}</button>
-              </div>
-              <div className='switchContainer'>
-                <button className='rectangle' onClick={() => this.handleRandomDNAClick()}>{'rDNA'}</button>
-                <button className='rectangle' onClick={() => this.handleRandomDNASquareClick()}>{'rDNA²'}</button>
-                <button className='rectangle' onClick={() => this.handleRandomAAClick()}>{'rAA'}</button>
-                <button className='rectangle' onClick={() => this.handleRandomAASquareClick()}>{'rAA²'}</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className='matrixContainer'>
-          <Matrix seq1={seq1} seq2={seq2} tracebackMatrix={tracebackMatrix} scoreMatrix={scoreMatrix} minScore={minScore} maxScores={maxScores} minimalistic={minimalistic}/>
-        </div>
-      </Fragment>
-    );
-  }
+  return (
+    <Fragment>
+      <Headline>
+        <TextInput label={'Sequence 1:'} seq={seq1} handleChange={(e) => setSeq1(e.target.value.toUpperCase())}/>
+        <TextInput label={'Sequence 2:'} seq={seq2} handleChange={(e) => setSeq2(e.target.value.toUpperCase())}/>
+        <Stats showStats={showStats} score={score} allignmentList={allignmentList} handleClick={() => setShowStats(!showStats)} setShowAllAllignments={setShowAllAllignments}/>
+        <SettingsContainer showSettings={showSettings} algorithm={algorithm} handleClick={() => setShowSettings(!showSettings)} >
+          <Select value={algorithm} options={['Needleman-Wunsch', 'Needleman-Wunsch-Linear', 'Smith-Waterman', 'Gotoh']} handleChange={(e) => setAlgorithm(parseInt(e.target.value))}/>
+          <Select value={substitutionsMatrix} options={['Custom', 'Blosumn45', 'Blosumn50', 'Blosumn62', 'Blosumn80']} handleChange={(e) => setSubstitutionsMatrix(parseInt(e.target.value))}/>
+          <SettingsSlideContainer show={substitutionsMatrix === 0 ? true : false} position={'calc((var(--box-size) + 30px) * -4)'}>
+            <NumberInput label={'Matchscore'} value={matchScore} handleChange={(e) => setMatchScore(e.target.value)}/>
+            <NumberInput label={'Mismatchscore'} value={mismatchScore} handleChange={(e) => setMismatchScore(e.target.value)}/>
+            <NumberInput label={'Gapscore'} value={gapScore} handleChange={(e) => setGapScore(e.target.value)}/>
+            <SettingsSlideContainer show={(substitutionsMatrix !== 0 || algorithm === 3) ? true : false} position={'calc((var(--box-size) + 30px) * -1)'} >
+              <NumberInput label={'Extension'} value={extensionScore} handleChange={(e) => setExtensionScore(e.target.value)}/>
+              <Switch label1={'Regular'} label2={'Minimalistic'} value={minimalistic} handleClick={(e) => setMinimalistic(!minimalistic)}/>
+              <Switch label1={'one Result'} label2={'all Results'} value={showAllAllignments} handleClick={(e) => setShowAllAllignments(!showAllAllignments)}/>
+              <Slide label={'Scale'} value={scale} handleChange={(e) => {setScale(e.target.value);}} />
+              <SettingsSlideContainer show={(substitutionsMatrix === 0) ? true : false} position={'calc((var(--box-size) + 5px) * -1)'} >
+                <RandomButtons setSeq1={setSeq1} setSeq2={setSeq2} minimalistic={minimalistic} scale={scale}/>
+              </SettingsSlideContainer>
+            </SettingsSlideContainer>
+          </SettingsSlideContainer>
+        </SettingsContainer>
+      </Headline>
+      <Matrix seq1={seq1} seq2={seq2} tracebackMatrix={tracebackMatrix} scoreMatrix={scoreMatrix} minScore={minScore} maxScores={maxScores} minimalistic={minimalistic} scale={scale} matrixHeight={matrixHeight * scale} matrixWidth={matrixWidth * scale}/>
+    </Fragment>
+  )
 }
 
 export default Allignment;
