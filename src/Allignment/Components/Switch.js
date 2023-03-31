@@ -14,7 +14,7 @@ export function Switch(props) {
     if (obj2Ref.current) {
       setStatsWidthObj2(obj2Ref.current.offsetWidth);
     }
-  }, []);
+  },[props.value]);
 
   const style = props.value ? {width: statsWidthObj2 + 10, left: statsWidthObj1 + 15} : {width: statsWidthObj1 + 10, left: 5};
 

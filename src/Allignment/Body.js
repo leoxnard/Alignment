@@ -1,6 +1,7 @@
 import React, { useMemo, useState, Fragment, useEffect } from 'react'
 import { computeScores } from './Algorithmms/Algorithms'
 import Matrix from './Components/Matrix';
+import { Version } from './Components/Version';
 import { Headline } from './Components/Headline'
 import { TextInput } from './Components/TextInput';
 import { SettingsContainer, SettingsSlideContainer } from './Components/Settings';
@@ -63,6 +64,7 @@ export function Allignment() {
   
   return (
     <Fragment>
+      <Version value={'v2.1.1'} />
       <Headline>
         <TextInput label={'Sequence 1:'} seq={seq1} handleChange={(e) => setSeq1(e.target.value.toUpperCase())}/>
         <TextInput label={'Sequence 2:'} seq={seq2} handleChange={(e) => setSeq2(e.target.value.toUpperCase())}/>
