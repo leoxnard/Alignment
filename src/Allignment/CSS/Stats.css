@@ -12,7 +12,7 @@
 .statsContainer {
   position: absolute;
   /* background-color: var(--color-2); */
-  background-color: var(--color-2);
+  background-color: rgb(0, 255, 255);
   padding: 10px;
   width: calc(100% - 20px);
   height: fit-content;
