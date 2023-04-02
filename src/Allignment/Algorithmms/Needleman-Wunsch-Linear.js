@@ -1,4 +1,4 @@
-import { getAllAlignments, getAlignment } from "../HelpFunctions/AlgorithmHelpers";
+import { getAlignment } from "../HelpFunctions/AlgorithmHelpers";
 import { substitutionsMatrixScore } from "./Substitutionsmatrices";
 
 export function NeedlemanWunschLinear(seq1, seq2, matchScore, mismatchScore, gapScore, substitutionsMatrix) {
