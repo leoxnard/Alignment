@@ -5,6 +5,7 @@
   font-size: var(--font-size);
   margin: 0;
   padding: 10px;
+  right: 0;
   display: flex;
   justify-content: center;
   align-items: center;

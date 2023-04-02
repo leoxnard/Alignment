@@ -1,7 +1,7 @@
-import { getAllAllignments, getAllignment } from "../HelpFunctions/AlgorithmHelpers";
+import { getAlignmentNumber, getAlignment } from "../HelpFunctions/AlgorithmHelpers";
 import { substitutionsMatrixScore } from "./Substitutionsmatrices";
 
-export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extensionScore, substitutionsMatrix, showAllAllignments) {
+export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extensionScore, substitutionsMatrix) {
   const seq1Length = seq1.length;
   const seq2Length = seq2.length;
   let maxScores = [seq1Length + 3];
@@ -110,7 +110,7 @@ export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extension
     }
   }
   
-  const array = new Array(traceback.length).fill(0);
+  const traceArray = new Array(traceback.length).fill(0);
   const gonnaVisit = new Array(traceback.length).fill(0);
   const maxStart = Math.max(m_matrix[matricesLength - 1], ix_matrix[matricesLength - 1], iy_matrix[matricesLength - 1]);
   scores[matricesLength - 1] = maxStart;
@@ -129,7 +129,7 @@ export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extension
 
   // All hashes
   for (let pos = traceback.length - 1; pos >= seq1Length + 4; pos--) {
-    array[pos] = gonnaVisit[pos];
+    traceArray[pos] = gonnaVisit[pos];
     if ([1, 4, 5, 7].includes(gonnaVisit[pos])) {
       gonnaVisit[pos - (seq1Length + 2) - 1] = m_matrix[matricesLength + pos];
     }
@@ -141,14 +141,5 @@ export function Gotoh(seq1, seq2, matchScore, mismatchScore, gapScore, extension
     }
   }
 
-  let allignments;
-  if (showAllAllignments) {
-    allignments = getAllAllignments(array, seq1, seq2, matricesLength - 1, seq1Length - 1, seq2Length - 1);
-  } else {
-    allignments = getAllignment(array, seq1, seq2, matricesLength - 1, seq1Length - 1, seq2Length - 1);
-  }
-  allignments = allignments.map(subArray => subArray.map(str => str.split('').reverse().join('')));
-  
-  //console.table(scores)
-  return([scores, minScore, maxScores, array, allignments, scores[matricesLength - 1]]);
+  return([scores, minScore, maxScores, traceArray, getAlignment(traceArray, seq1, seq2, matricesLength - 1, seq1Length - 1, seq2Length - 1), getAlignmentNumber(traceArray, seq1Length + 2, matricesLength - 1), scores[matricesLength - 1]]);
 }

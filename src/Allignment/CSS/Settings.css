@@ -4,7 +4,6 @@
   height: calc(100vh - var(--headline-size) - 50px);
   width: calc(var(--settingsBar-size) - 30px);
   padding: 15px;
-  border-left: var(--border);
   right: calc(-1 * var(--settingsBar-size) - 5px);
   bottom: 0px;
   transition: transform 0.5s ease;

@@ -1,6 +1,6 @@
 import React, { useMemo, useState, Fragment, useEffect } from 'react'
-import { computeScores } from './Algorithmms/Algorithms'
 import Matrix from './Components/Matrix';
+import { computeScores, computeAlignments } from './Algorithmms/Algorithms'
 import { Version } from './Components/Version';
 import { Headline } from './Components/Headline'
 import { TextInput } from './Components/TextInput';
@@ -9,10 +9,11 @@ import { Select } from './Components/Select';
 import { Stats } from './Components/Stats';
 import { NumberInput } from './Components/NumberInput';
 import { Switch } from './Components/Switch';
+import { Button } from './Components/Button';
 import { Slide } from './Components/Slide';
 import { RandomButtons } from './Components/RandomButtons';
 
-export function Allignment() {
+export function Alignment() {
   const [algorithm, setAlgorithm] = useState(0);
   const [substitutionsMatrix, setSubstitutionsMatrix] = useState(0);
 
@@ -26,7 +27,8 @@ export function Allignment() {
 
   const [scoreMatrix, setScoreMatrix] = useState([0,0,0,0]);
   const [tracebackMatrix, setTracebackMatrix] = useState([0,0,0,0]);
-  const [allignmentList, setAllignmentList] = useState([]);
+  const [alignmentList, setAlignmentList] = useState([]);
+  const [alignmentNumber, setAlignmentNumber] = useState(1);
   const [maxScores, setMaxScores] = useState(4);
   const [minScore, setMinScore] = useState(4);
   const [score, setScore] = useState(0);
@@ -35,24 +37,24 @@ export function Allignment() {
   const [scale, setScale] = useState(1);
   const [showStats, setShowStats] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [showAllAllignments, setShowAllAllignments] = useState(false);
 
   const [matrixHeight, setMatrixHeight] = useState(0);
   const [matrixWidth, setMatrixWidth] = useState(0);
   
   useMemo(() => {
     if (!(isNaN(parseInt(matchScore)) || isNaN(parseInt(mismatchScore)) || isNaN(parseInt(gapScore)) || (isNaN(parseInt(extensionScore)) && algorithm === 3))){
-      const [scoreMatrix_, minScore_, maxScores_, tracebackMatrix_, allignmentList_, score_] = computeScores(seq1, seq2, parseInt(matchScore), parseInt(mismatchScore), parseInt(gapScore), parseInt(extensionScore), substitutionsMatrix, algorithm, showAllAllignments);
+      const [scoreMatrix_, minScore_, maxScores_, tracebackMatrix_, alignmentList_, alignmentNumber_, score_] = computeScores(seq1, seq2, parseInt(matchScore), parseInt(mismatchScore), parseInt(gapScore), parseInt(extensionScore), substitutionsMatrix, algorithm);
       setScoreMatrix(scoreMatrix_);
       setTracebackMatrix(tracebackMatrix_);
       setMinScore(minScore_);
       setMaxScores(maxScores_);
-      setAllignmentList(allignmentList_);
+      setAlignmentList(alignmentList_);
+      setAlignmentNumber(alignmentNumber_);
       setScore(score_);
     }
     document.documentElement.style.setProperty('--square-size', (minimalistic ? '10px' : '50px'));
     document.documentElement.style.setProperty('--row-length', seq1.length + (minimalistic ? 1 : 2));
-  }, [seq1, seq2, gapScore, extensionScore, mismatchScore, matchScore, algorithm, substitutionsMatrix, showAllAllignments, minimalistic]);
+  }, [seq1, seq2, gapScore, extensionScore, mismatchScore, matchScore, algorithm, substitutionsMatrix, minimalistic]);
 
   useEffect(() => {
     setMatrixWidth(minimalistic ? ((seq1.length) * 9.5 + 10) : ((seq1.length + 2) * 49.5 + 5));
@@ -61,14 +63,18 @@ export function Allignment() {
   useEffect(() => {
     setMatrixHeight(minimalistic ? ((seq2.length) * 9.5 + 10) : ((seq2.length + 2) * 49.5 + 5));
   }, [seq2, minimalistic])
-  
+
+  const showAllAlignments = () => {
+    setAlignmentList(computeAlignments(tracebackMatrix, seq1, seq2, tracebackMatrix.length - 1, seq1.length - 1, seq2.length - 1));
+  };
+
   return (
     <Fragment>
-      <Version value={'v2.1.1'} />
+      <Version value={'v2.2.1'} />
       <Headline>
         <TextInput label={'Sequence 1:'} seq={seq1} handleChange={(e) => setSeq1(e.target.value.toUpperCase())}/>
         <TextInput label={'Sequence 2:'} seq={seq2} handleChange={(e) => setSeq2(e.target.value.toUpperCase())}/>
-        <Stats showStats={showStats} score={score} allignmentList={allignmentList} handleClick={() => setShowStats(!showStats)} setShowAllAllignments={setShowAllAllignments}/>
+        <Stats showStats={showStats} score={score} alignmentList={alignmentList} alignmentNumber={alignmentNumber} showSettings={showSettings} handleClick={() => setShowStats(!showStats)}/>
         <SettingsContainer showSettings={showSettings} algorithm={algorithm} handleClick={() => setShowSettings(!showSettings)} >
           <Select value={algorithm} options={['Needleman-Wunsch', 'Needleman-Wunsch-Linear', 'Smith-Waterman', 'Gotoh']} handleChange={(e) => setAlgorithm(parseInt(e.target.value))}/>
           <Select value={substitutionsMatrix} options={['Custom', 'Blosumn45', 'Blosumn50', 'Blosumn62', 'Blosumn80']} handleChange={(e) => setSubstitutionsMatrix(parseInt(e.target.value))}/>
@@ -79,7 +85,7 @@ export function Allignment() {
             <SettingsSlideContainer show={(substitutionsMatrix !== 0 || algorithm === 3) ? true : false} position={'calc((var(--box-size) + 30px) * -1)'} >
               <NumberInput label={'Extension'} value={extensionScore} handleChange={(e) => setExtensionScore(e.target.value)}/>
               <Switch label1={'Regular'} label2={'Minimalistic'} value={minimalistic} handleClick={(e) => setMinimalistic(!minimalistic)}/>
-              <Switch label1={'one Result'} label2={'all Results'} value={showAllAllignments} handleClick={(e) => setShowAllAllignments(!showAllAllignments)}/>
+              <Button label={'all Results'} disabled={alignmentNumber > 1000 ? 1 : 0} handleClick={() => showAllAlignments()}/>
               <Slide label={'Scale'} value={scale} handleChange={(e) => {setScale(e.target.value);}} />
               <SettingsSlideContainer show={(substitutionsMatrix === 0) ? true : false} position={'calc((var(--box-size) + 5px) * -1)'} >
                 <RandomButtons setSeq1={setSeq1} setSeq2={setSeq2} minimalistic={minimalistic} scale={scale}/>
@@ -93,4 +99,4 @@ export function Allignment() {
   )
 }
 
-export default Allignment;
+export default Alignment;

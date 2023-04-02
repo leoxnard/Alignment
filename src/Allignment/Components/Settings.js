@@ -16,7 +16,7 @@ export function SettingsContainer(props) {
 
 function Settings(props) {
   return (
-    <div className='settingsWrapperContainer' style={{ transform: (props.showSettings ? 'translateX(0px)' : 'translateX(-100%)') }} >
+    <div className='settingsWrapperContainer' style={{ transform: (props.showSettings ? 'translateX(-100%)' : 'translateX(0px)') }} >
       <div className='settingsWrapper' > { props.children }</div>
     </div>
   ); 

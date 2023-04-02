@@ -6,47 +6,47 @@ export function Stats(props) {
   return (
     <Fragment>
       <button className={props.showStats ? 'statsButton onClick' : 'statsButton'} onClick={props.handleClick}/>
-      <StatsContainer showStats={props.showStats} score={props.score} allignmentList={props.allignmentList}/>
+      <StatsContainer showStats={props.showStats} score={props.score} alignmentList={props.alignmentList} alignmentNumber={props.alignmentNumber} showSettings={props.showSettings}/>
     </Fragment>
   )
 }
 
 function StatsContainer(props) {
-  const [allignmentList, setAllignmentList] = useState([])
+  const [alignmentList, setAlignmentList] = useState([])
   const wrapperRef = useRef(null);
 
   useEffect(() => {
     if (props.showStats) {
-      setAllignmentList(props.allignmentList);
+      setAlignmentList(props.alignmentList);
     }
-  }, [props.showStats, props.allignmentList]);
+  }, [props.showStats, props.alignmentList]);
 
-  const memorizedAllignments = useMemo(() => {
-    if (allignmentList.length > 1000) {
+  const memorizedAlignments = useMemo(() => {
+    if (alignmentList.length > 1000) {
       return (
-        <div key={0} className='allignment'>
-          <p>{allignmentList[0][0]}</p>
-          <p>{allignmentList[0][2]}</p>
-          <p>{allignmentList[0][1]}</p>
+        <div key={0} className='alignment'>
+          <p>{alignmentList[0][0]}</p>
+          <p>{alignmentList[0][2]}</p>
+          <p>{alignmentList[0][1]}</p>
       </div>
       )
     }
-    return allignmentList.map( ([str1, str2, symbol], index) => (
-      <div key={index} className='allignment'>
+    return alignmentList.map( ([str1, str2, symbol], index) => (
+      <div key={index} className='alignment'>
         <p>{str1}</p>
         <p>{symbol}</p>
         <p>{str2}</p>
       </div>
     ))
-  }, [allignmentList])
+  }, [alignmentList])
 
   return (
     <div className='statsMask'>
       <div ref={wrapperRef} className='statsContainer' style={{transform:`translateY(${props.showStats ? '0px' : `-100%`})`}} >
         <Number label={'Score'} value={props.score}/>
-        <Number label={'displayed Allignments'} value={props.allignmentList.length} />
-        <div className='statsWrapper'>
-          {memorizedAllignments}
+        <Number label={'possible Alignments'} value={props.alignmentNumber} />
+        <div className='statsWrapper' style={{width: (props.showSettings ? 'calc(100% - var(--settingsBar-size))' : '100%')}}>
+          {memorizedAlignments}
         </div>
       </div>
     </div>

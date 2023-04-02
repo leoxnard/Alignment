@@ -4,10 +4,10 @@ import '../CSS/RandomButtons.css'
 
 export function RandomButtons(props) {
   const handleClick = (dna, square) => {
-    const { seq1_, seq2_, showAllAllignments_ } = randomSequence(dna, square, props.minimalistic, props.scale);
+    const { seq1_, seq2_, showAllAlignments_ } = randomSequence(dna, square, props.minimalistic, props.scale);
     props.setSeq1(seq1_);
     props.setSeq2(seq2_);
-    if (props.showAllAllignments && !showAllAllignments_) {props.setShowAllAllignments(showAllAllignments_);}
+    if (props.showAllAlignments && !showAllAlignments_) {props.setShowAllAlignments(showAllAlignments_);}
   }
 
   return (

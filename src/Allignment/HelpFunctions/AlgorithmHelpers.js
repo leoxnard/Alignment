@@ -1,5 +1,5 @@
 const matchSymbol = '|'; const mismatchSymbol = '‡'; const gapSymbol = '+';
-export function getAllignment(array, seq1, seq2, arrayPos, seq1Pos_, seq2Pos_) {
+export function getAlignment(array, seq1, seq2, arrayPos, seq1Pos_, seq2Pos_) {
   let pos = arrayPos;
   let seq1Pos = seq1Pos_;
   let seq2Pos = seq2Pos_;
@@ -27,49 +27,54 @@ export function getAllignment(array, seq1, seq2, arrayPos, seq1Pos_, seq2Pos_) {
       pos -= seq1.length + 3;
     }
   }
-  return [[str1, str2, symbols]]
+  return [[str1.split('').reverse().join(''), str2.split('').reverse().join(''), symbols.split('').reverse().join('')]]
 }
 
-export function getAllAllignments(array, seq1, seq2, arrayPos, seq1Pos, seq2Pos) {
+export function getAllAlignments(traceArray, seq1, seq2, arrayPos, seq1Pos, seq2Pos) {
+  const list = getAllAlignmentsHelp(traceArray, seq1, seq2, arrayPos, seq1Pos, seq2Pos);
+  return list.map(subArray => subArray.map(str => str.split('').reverse().join('')));
+}
+
+function getAllAlignmentsHelp(traceArray, seq1, seq2, arrayPos, seq1Pos, seq2Pos) {
   const seq1Length = seq1.length
-  if (array[arrayPos] === 1) {
+  if (traceArray[arrayPos] === 1) {
     return (
-        merge( [ seq1[seq1Pos], seq2[seq2Pos], ((seq1[seq1Pos] === seq2[seq2Pos]) ? matchSymbol : mismatchSymbol) ] , getAllAllignments(array, seq1, seq2, (arrayPos - seq1Length - 3), (seq1Pos - 1), (seq2Pos - 1)))
+        merge( [ seq1[seq1Pos], seq2[seq2Pos], ((seq1[seq1Pos] === seq2[seq2Pos]) ? matchSymbol : mismatchSymbol) ] , getAllAlignmentsHelp(traceArray, seq1, seq2, (arrayPos - seq1Length - 3), (seq1Pos - 1), (seq2Pos - 1)))
         );
   }
-  if (array[arrayPos] === 2) {
+  if (traceArray[arrayPos] === 2) {
     return (
-        merge( ['-', seq2[seq2Pos], gapSymbol], getAllAllignments(array, seq1, seq2, (arrayPos - seq1Length - 2), seq1Pos, (seq2Pos - 1)))
+        merge( ['-', seq2[seq2Pos], gapSymbol], getAllAlignmentsHelp(traceArray, seq1, seq2, (arrayPos - seq1Length - 2), seq1Pos, (seq2Pos - 1)))
     );
   }
-  if (array[arrayPos] === 3) {
+  if (traceArray[arrayPos] === 3) {
     return (
-        merge( [seq1[seq1Pos], '-', gapSymbol], getAllAllignments(array, seq1, seq2, (arrayPos - 1), (seq1Pos - 1), seq2Pos))
+        merge( [seq1[seq1Pos], '-', gapSymbol], getAllAlignmentsHelp(traceArray, seq1, seq2, (arrayPos - 1), (seq1Pos - 1), seq2Pos))
     );
   }
-  if (array[arrayPos] === 4) {
+  if (traceArray[arrayPos] === 4) {
     return (
-        merge([seq1[seq1Pos], seq2[seq2Pos], ((seq1[seq1Pos] === seq2[seq2Pos]) ? matchSymbol : mismatchSymbol) ] , getAllAllignments(array, seq1, seq2, (arrayPos - seq1Length - 3), (seq1Pos - 1), (seq2Pos - 1))).concat(
-        merge((['-', seq2[seq2Pos], gapSymbol]), getAllAllignments(array, seq1, seq2, (arrayPos - seq1Length - 2), seq1Pos, (seq2Pos - 1)))
+        merge([seq1[seq1Pos], seq2[seq2Pos], ((seq1[seq1Pos] === seq2[seq2Pos]) ? matchSymbol : mismatchSymbol) ] , getAllAlignmentsHelp(traceArray, seq1, seq2, (arrayPos - seq1Length - 3), (seq1Pos - 1), (seq2Pos - 1))).concat(
+        merge((['-', seq2[seq2Pos], gapSymbol]), getAllAlignmentsHelp(traceArray, seq1, seq2, (arrayPos - seq1Length - 2), seq1Pos, (seq2Pos - 1)))
         ));
   }
-  if (array[arrayPos] === 5) {
+  if (traceArray[arrayPos] === 5) {
     return (
-        merge( [seq1[seq1Pos], seq2[seq2Pos], ((seq1[seq1Pos] === seq2[seq2Pos]) ? matchSymbol : mismatchSymbol) ] , getAllAllignments(array, seq1, seq2, (arrayPos - seq1Length - 3), (seq1Pos - 1), (seq2Pos - 1))).concat(
-        merge( [seq1[seq1Pos], '-', gapSymbol] , getAllAllignments(array, seq1, seq2, (arrayPos - 1), (seq1Pos - 1), seq2Pos))
+        merge( [seq1[seq1Pos], seq2[seq2Pos], ((seq1[seq1Pos] === seq2[seq2Pos]) ? matchSymbol : mismatchSymbol) ] , getAllAlignmentsHelp(traceArray, seq1, seq2, (arrayPos - seq1Length - 3), (seq1Pos - 1), (seq2Pos - 1))).concat(
+        merge( [seq1[seq1Pos], '-', gapSymbol] , getAllAlignmentsHelp(traceArray, seq1, seq2, (arrayPos - 1), (seq1Pos - 1), seq2Pos))
         ));
   }
-  if (array[arrayPos] === 6) {
+  if (traceArray[arrayPos] === 6) {
     return (
-        merge( ['-', seq2[seq2Pos], gapSymbol] , getAllAllignments(array, seq1, seq2, (arrayPos - seq1Length - 2), seq1Pos, (seq2Pos - 1))).concat(
-        merge( [seq1[seq1Pos], '-', gapSymbol] , getAllAllignments(array, seq1, seq2, (arrayPos - 1), (seq1Pos - 1), seq2Pos))
+        merge( ['-', seq2[seq2Pos], gapSymbol] , getAllAlignmentsHelp(traceArray, seq1, seq2, (arrayPos - seq1Length - 2), seq1Pos, (seq2Pos - 1))).concat(
+        merge( [seq1[seq1Pos], '-', gapSymbol] , getAllAlignmentsHelp(traceArray, seq1, seq2, (arrayPos - 1), (seq1Pos - 1), seq2Pos))
         ));
   }
-  if (array[arrayPos] === 7) {
+  if (traceArray[arrayPos] === 7) {
     return (
-        merge( [seq1[seq1Pos], seq2[seq2Pos], ((seq1[seq1Pos] === seq2[seq2Pos]) ? matchSymbol : mismatchSymbol)] , getAllAllignments(array, seq1, seq2, (arrayPos - seq1Length - 3), (seq1Pos - 1), (seq2Pos - 1))).concat(
-        merge( ['-', seq2[seq2Pos], gapSymbol] , getAllAllignments(array, seq1, seq2, (arrayPos - seq1Length - 2), seq1Pos, (seq2Pos - 1))),
-        merge( [seq1[seq1Pos], '-', gapSymbol] , getAllAllignments(array, seq1, seq2, (arrayPos - 1), (seq1Pos - 1), seq2Pos))
+        merge( [seq1[seq1Pos], seq2[seq2Pos], ((seq1[seq1Pos] === seq2[seq2Pos]) ? matchSymbol : mismatchSymbol)] , getAllAlignmentsHelp(traceArray, seq1, seq2, (arrayPos - seq1Length - 3), (seq1Pos - 1), (seq2Pos - 1))).concat(
+        merge( ['-', seq2[seq2Pos], gapSymbol] , getAllAlignmentsHelp(traceArray, seq1, seq2, (arrayPos - seq1Length - 2), seq1Pos, (seq2Pos - 1))),
+        merge( [seq1[seq1Pos], '-', gapSymbol] , getAllAlignmentsHelp(traceArray, seq1, seq2, (arrayPos - 1), (seq1Pos - 1), seq2Pos))
         ));
   }
   return ([['','','']]);
@@ -106,4 +111,25 @@ export function getTraceArray(traceback, seq1Length, starters) {
     }
   }
   return array;
+}
+
+export function getAlignmentNumber(tracebackMatrix, rowLength, pos, depth = 0) {
+  if (depth > 20) {
+    //console.log('Recursion limit exceeded');
+    return 1; // or return a default value
+  }
+  if (tracebackMatrix[pos] === 0) {
+    return 1;
+  }
+  let counter = 0;
+  if ([1, 4, 5, 7].includes(tracebackMatrix[pos])) {
+    counter += getAlignmentNumber(tracebackMatrix, rowLength, pos - rowLength - 1, depth + (tracebackMatrix[pos] === 1 ? 0 : 1));
+  }
+  if ([2, 4, 6, 7].includes(tracebackMatrix[pos])) {
+    counter += getAlignmentNumber(tracebackMatrix, rowLength, pos - rowLength,depth + (tracebackMatrix[pos] === 2 ? 0 : 1));
+  }
+  if ([3, 5, 6, 7].includes(tracebackMatrix[pos])) {
+    counter += getAlignmentNumber(tracebackMatrix, rowLength, pos - 1, depth + (tracebackMatrix[pos] === 3 ? 0 : 1));
+  }
+  return counter;
 }

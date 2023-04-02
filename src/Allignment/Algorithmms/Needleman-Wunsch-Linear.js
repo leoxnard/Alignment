@@ -1,7 +1,7 @@
-import { getAllAllignments, getAllignment } from "../HelpFunctions/AlgorithmHelpers";
+import { getAllAlignments, getAlignment } from "../HelpFunctions/AlgorithmHelpers";
 import { substitutionsMatrixScore } from "./Substitutionsmatrices";
 
-export function NeedlemanWunschLinear(seq1, seq2, matchScore, mismatchScore, gapScore, substitutionsMatrix, showAllAllignments) {
+export function NeedlemanWunschLinear(seq1, seq2, matchScore, mismatchScore, gapScore, substitutionsMatrix) {
   if (seq1.length === 0 && seq2.length === 0) { return([['','','',''], 3, [3], [0,0,0,0]]);}
   const matrixLength = (seq1.length + 2) * (seq2.length + 2);
   const coordinates = [[0, 0, 3], ...getCoordinates(matchScore, mismatchScore, gapScore, substitutionsMatrix, seq1, seq2, 0, seq1.length, 0, seq2.length)];
@@ -17,17 +17,12 @@ export function NeedlemanWunschLinear(seq1, seq2, matchScore, mismatchScore, gap
     }
   }
   //console.table(tracebackMatrix)
-  let allignments;
-  if (showAllAllignments) {
-    allignments = getAllAllignments(tracebackMatrix, seq1, seq2, matrixLength - 1, seq1.length - 1, seq2.length - 1);
-  } else {
-    allignments = getAllignment(tracebackMatrix, seq1, seq2, matrixLength - 1, seq1.length - 1, seq2.length - 1);
-  }
-  const allignmentsRev = allignments.map(subArray => subArray.map(str => str.split('').reverse().join('')));
-  return ([ new Array(matrixLength).fill(''), 3, [3], tracebackMatrix, allignmentsRev, getScoreLinear(matchScore, mismatchScore, gapScore, substitutionsMatrix, seq1, seq2) ]);
+  const alignments = getAlignment(tracebackMatrix, seq1, seq2, matrixLength - 1, seq1.length - 1, seq2.length - 1);
+  return ([ new Array(matrixLength).fill(''), 3, [3], tracebackMatrix, alignments, 1, getScoreLinear(matchScore, mismatchScore, gapScore, substitutionsMatrix, alignments) ]);
 }
 
 function getCoordinates(matchScore, mismatchScore, gapScore, substitutionsMatrix, seq1, seq2, seq1Start, seq1End, seq2Start, seq2End) {
+  // GAP SCORE IS ALREADY ADJUSTED!
   const columnLength = (seq2End - seq2Start + 1);
   const rowLength = (seq1End - seq1Start + 1);
   if (rowLength === 1) {
@@ -64,17 +59,17 @@ function getCoordinates(matchScore, mismatchScore, gapScore, substitutionsMatrix
   } else if (rowLength === 2) {
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //console.log('case 1');
-    const scores = new Array(columnLength * 2).fill(0);
-    const traceback = new Array(columnLength * 2);
+    const scores = new Array(columnLength * 4).fill(0);
     let result = [];
     
     //initialize Array
     for (let i = 0; i < columnLength; i++){
-      scores[i] = i*gapScore;
-      traceback[i] = 1;
+      scores[i] = i * gapScore;
+      scores[2 * columnLength + i] = 1;
+      scores[3 * columnLength + i] = 1;
     }
     scores[columnLength] = scores[columnLength] + gapScore;
-    traceback[columnLength] = 2;
+    scores[3 * columnLength] = 2;
     
     //fülle rest auf
     for (let y = 1; y < columnLength; y++) {
@@ -84,25 +79,25 @@ function getCoordinates(matchScore, mismatchScore, gapScore, substitutionsMatrix
       scores[columnLength + y] = Math.max(diagonalScore, verticalScore, horizontalScore);
       
       if (scores[columnLength + y] === diagonalScore) {
-        traceback[columnLength + y] = 0;
+        scores[3 * columnLength + y] = 0;
       } else if (scores[columnLength + y] === verticalScore) {
-        traceback[columnLength + y] = 1;
+        scores[3 * columnLength + y] = 1;
       } else {
-        traceback[columnLength + y] = 2;
+        scores[3 * columnLength + y] = 2;
       } 
     }
     
     //traceback
-    let pos = traceback.length - 1;
+    let pos = 2 * columnLength - 1;
     let posX = seq1End;
     let posY = seq2End;
     while (pos > 0) {
-      if (traceback[pos] === 0) {
+      if (scores[2 * columnLength + pos] === 0) {
         result.push([posX, posY, 0]);
         pos -= columnLength + 1;
         posX--;
         posY--;
-      } else if (traceback[pos] === 1) {
+      } else if (scores[2 * columnLength + pos] === 1) {
         result.push([posX, posY, 1]);
         pos -= 1;
         posY--;
@@ -116,17 +111,17 @@ function getCoordinates(matchScore, mismatchScore, gapScore, substitutionsMatrix
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   } else if (columnLength === 2) { //case 2
     //console.log('case 2');
-    const scores = new Array(rowLength * 2).fill(0);
-    const traceback = new Array(rowLength * 2);
+    const scores = new Array(rowLength * 4).fill(0);
     let result = [];
     
     //initialize Array
     for (let i = 0; i < rowLength; i++){
-      scores[i] = i*gapScore;
-      traceback[i] = 2;
+      scores[i] = i * gapScore;
+      scores[2 * rowLength + i] = 2;
+      scores[3 * rowLength + i] = 2;
     }
     scores[rowLength] = gapScore;
-    traceback[rowLength] = 1;
+    scores[3 * rowLength] = 1;
     
     //fülle rest auf
     for (let x = 1; x < rowLength; x++) {
@@ -136,25 +131,25 @@ function getCoordinates(matchScore, mismatchScore, gapScore, substitutionsMatrix
       scores[rowLength + x] = Math.max(diagonalScore, verticalScore, horizontalScore);
       
       if (scores[rowLength + x] === diagonalScore) {
-        traceback[rowLength + x] = 0;
+        scores[3 * rowLength + x] = 0;
       } else if (scores[rowLength + x] === verticalScore) {
-        traceback[rowLength + x] = 1;
+        scores[3 * rowLength + x] = 1;
       } else {
-        traceback[rowLength + x] = 2;
+        scores[3 * rowLength + x] = 2;
       } 
     }
     
     //traceback
-    let pos = traceback.length - 1;
+    let pos = 2 * rowLength - 1;
     let posX = seq1End;
     let posY = seq2End;
     while (pos > 0) {
-      if (traceback[pos] === 0) {
+      if (scores[2 * rowLength + pos] === 0) {
         result.push([posX, posY, 0]);
         pos -= rowLength + 1;
         posX--;
         posY--;
-      } else if (traceback[pos] === 1) {
+      } else if (scores[2 * rowLength + pos] === 1) {
         result.push([posX, posY, 1]);
         pos -= rowLength;
         posY--;
@@ -174,7 +169,7 @@ function getCoordinates(matchScore, mismatchScore, gapScore, substitutionsMatrix
     
     //initialize Array
     for (let i = 0; i < columnLength; i++){
-      scores[i] = i*gapScore;
+      scores[i] = i * gapScore;
       scores[i + 2 * columnLength] = i + seq2Start;
       scores[i + 3 * columnLength] = i + seq2Start;
     }
@@ -214,33 +209,19 @@ function getCoordinates(matchScore, mismatchScore, gapScore, substitutionsMatrix
         scores[2 * columnLength + i] = scores[3 * columnLength + i];
       }
     }
-    console.log(scores[scores.length - 1])
     return ([...getCoordinates(matchScore, mismatchScore, gapScore, substitutionsMatrix, seq1, seq2, seq1Start, m, seq2Start, scores[scores.length - 1]), ...getCoordinates(matchScore, mismatchScore, gapScore, substitutionsMatrix, seq1, seq2, m, seq1End, scores[scores.length - 1], seq2End)]);
   }
 }
 
-function getScoreLinear(matchScore, mismatchScore, gapScore, substitutionsMatrix, seq1, seq2) {
-  //console.log('getScoreLinear')
-  const columnLength = seq2.length + 1;
-  const scores = new Array(2 * columnLength).fill(0);
-
-  //initialize Array
-  for (let i = 0; i < columnLength; i++){
-    scores[i] = i*gapScore;
-  }
-
-  for (let x = 1; x < seq1.length; x++) {
-    scores[columnLength] = scores[0] + gapScore;
-    for (let y = 1; y < columnLength; y++) {
-      const diagonalScore = scores[y - 1] + substitutionsMatrixScore(substitutionsMatrix, seq1[x], seq2[y - 1], matchScore, mismatchScore);
-      const verticalScore = scores[columnLength + y - 1] + gapScore;
-      const horizontalScore = scores[y] + gapScore;
-      scores[columnLength + y] = Math.max(diagonalScore, verticalScore, horizontalScore);
+function getScoreLinear(matchScore, mismatchScore, gapScore, substitutionsMatrix, alignments) {
+  const [alignmentString1, alignmentString2] = alignments[0];
+  let score = 0;
+  for (let i = 0; i < alignmentString1.length; i++) {
+    if (alignmentString1[i] === '-' || alignmentString2[i] === '-') {
+      score += gapScore;
+    } else {
+      score += substitutionsMatrixScore(substitutionsMatrix, alignmentString1[i], alignmentString2[i], matchScore, mismatchScore);
     }
-    for (let i = 0; i < columnLength; i++) {
-      scores[i] = scores[columnLength + i];
-    }
-    
   }
-  return scores[scores.length - 1];
+  return score;
 }

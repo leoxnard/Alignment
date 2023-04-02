@@ -8,14 +8,14 @@
 }
 
 .number {
-  height: var(--box-size);
-  width: var(--box-size);
+  height: calc(var(--box-size) - 10px);
+  min-width: calc(var(--box-size) - 10px);
   background-color: var(--color-2);
   color: var(--text-color);
   font-size: var(--font-size);
   border: 5px solid var(--color-1);
   margin: 5px;
-  padding: 0;
+  padding: 5px;
   display: flex;
   justify-content: center;
   align-items: center;

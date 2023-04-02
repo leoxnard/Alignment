@@ -1,7 +1,7 @@
-import { getAllignment, getAllAllignments, getTraceArray } from "../HelpFunctions/AlgorithmHelpers";
+import { getAlignment, getAlignmentNumber, getTraceArray } from "../HelpFunctions/AlgorithmHelpers";
 import { substitutionsMatrixScore } from "./Substitutionsmatrices";
 
-export function SmithWaterman(seq1, seq2, matchScore, mismatchScore, gapScore, substitutionsMatrix, showAllAllignments) {
+export function SmithWaterman(seq1, seq2, matchScore, mismatchScore, gapScore, substitutionsMatrix) {
   const seq1Length = seq1.length;
   const seq2Length = seq2.length;
   let maxScores = [seq1Length + 3];
@@ -48,17 +48,10 @@ export function SmithWaterman(seq1, seq2, matchScore, mismatchScore, gapScore, s
   }
 
   const array = getTraceArray(traceback, seq1Length, maxScores)
-  let allignments = [];
-  if (showAllAllignments) {
-    for (let i = 0; i < maxScores.length; i++) {
-      allignments = allignments.concat(getAllAllignments(array, seq1, seq2, maxScores[i], maxScores[i] % (seq1Length + 2) - 2, Math.floor(maxScores[i] / (seq1Length + 2) - 2)));
-    }
-  } else {
-    for (let i = 0; i < maxScores.length; i++) {
-      allignments = allignments.concat(getAllignment(array, seq1, seq2, maxScores[i], maxScores[i] % (seq1Length + 2) - 2, Math.floor(maxScores[i] / (seq1Length + 2) - 2)));
-    }
+  let alignments = [];
+  for (let i = 0; i < maxScores.length; i++) {
+    alignments = alignments.concat(getAlignment(array, seq1, seq2, maxScores[i], maxScores[i] % (seq1Length + 2) - 2, Math.floor(maxScores[i] / (seq1Length + 2) - 2)));
   }
-  const allignmentsFilter = allignments.filter((allignment) => {return (allignment[0].length > 0)});
-  const allignmentsRev = allignmentsFilter.map(subArray => subArray.map(str => str.split('').reverse().join('')));
-  return([scores, seq1Length + 3, maxScores, array, allignmentsRev, scores[maxScores[0]] ]);
+  // const alignmentsFilter = alignments.filter((alignment) => {return (alignment[0].length > 0)});
+  return([scores, seq1Length + 3, maxScores, array, alignments, getAlignmentNumber(traceback, seq1Length + 2, matricesLength - 1), scores[maxScores[0]] ]);
 }

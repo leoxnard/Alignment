@@ -1,7 +1,7 @@
-import { getAllignment, getAllAllignments, getTraceArray } from "../HelpFunctions/AlgorithmHelpers";
+import { getAlignment, getAlignmentNumber, getTraceArray } from "../HelpFunctions/AlgorithmHelpers";
 import { substitutionsMatrixScore } from "./Substitutionsmatrices";
 
-export function NeedlemanWunsch(seq1, seq2, matchScore, mismatchScore, gapScore, substitutionsMatrix, showAllAllignments) {
+export function NeedlemanWunsch(seq1, seq2, matchScore, mismatchScore, gapScore, substitutionsMatrix) {
   const seq1Length = seq1.length;
   const seq2Length = seq2.length;
   let maxScores = [seq1Length + 3];
@@ -75,14 +75,6 @@ export function NeedlemanWunsch(seq1, seq2, matchScore, mismatchScore, gapScore,
       }
     }
   }
-  
-  const array = getTraceArray(traceback, seq1Length, [matricesLength - 1]);
-  let allignments;
-  if (showAllAllignments) {
-    allignments = getAllAllignments(array, seq1, seq2, matricesLength - 1, seq1Length - 1, seq2Length - 1);
-  } else {
-    allignments = getAllignment(array, seq1, seq2, matricesLength - 1, seq1Length - 1, seq2Length - 1);
-  }
-  allignments = allignments.map(subArray => subArray.map(str => str.split('').reverse().join('')));
-  return([scores, minScore, maxScores, array, allignments, scores[matricesLength - 1]]);
+  const selectedTracbackArray = getTraceArray(traceback, seq1Length, [matricesLength - 1]);
+  return([scores, minScore, maxScores, selectedTracbackArray, getAlignment(selectedTracbackArray, seq1, seq2, matricesLength - 1, seq1Length - 1, seq2Length - 1), getAlignmentNumber(traceback, seq1Length + 2, matricesLength - 1), scores[matricesLength - 1]]);
 }

@@ -13,15 +13,11 @@
   text-align: center;
   color: var(--text-color);
   font-size: var(--font-size);
-  opacity: 0.9;
   margin: 5px;
   align-items: center;
   display: flex;
   z-index: 1;
-}
-
-.object:hover {
-  opacity: 1;
+  pointer-events: none;
 }
 
 .mutableObject {
@@ -29,4 +25,8 @@
   background-color: var(--color-2);
   position: absolute;
   transition: all 0.5s ease;
+}
+
+.mutableObject:hover {
+  background-color: var(--color-2-accent);
 }

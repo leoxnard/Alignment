@@ -37,7 +37,7 @@ export function randomSequence(dna, square, minimalistic, scale) { //all in bool
     seq2Length = min;
   }
   const randomSeqFunction = dna ? randomDNASequence : randomAASequence;
-  return {seq1_: randomSeqFunction(seq1Length), seq2_: randomSeqFunction(seq2Length), showAllAllignments_: (seq1Length + seq2Length > 100) ? false : true};
+  return {seq1_: randomSeqFunction(seq1Length), seq2_: randomSeqFunction(seq2Length), showAllAlignments_: (seq1Length + seq2Length > 100) ? false : true};
 }
 
 function getLevel(value, range) {
