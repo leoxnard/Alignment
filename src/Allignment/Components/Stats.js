@@ -1,17 +1,17 @@
-import React, { useState, Fragment, useRef, useMemo, useEffect } from 'react'
+import React, { useState, useRef, useMemo, useEffect } from 'react'
 import { Number } from './Number'
 import '../CSS/Stats.css'
 
-export function Stats(props) {
+export function StatsContainer(props) {
   return (
-    <Fragment>
+    <div className='statsContainer'>
       <button className={props.showStats ? 'statsButton onClick' : 'statsButton'} onClick={props.handleClick}/>
-      <StatsContainer showStats={props.showStats} score={props.score} alignmentList={props.alignmentList} alignmentNumber={props.alignmentNumber} showSettings={props.showSettings}/>
-    </Fragment>
+      <Stats showStats={props.showStats} score={props.score} alignmentList={props.alignmentList} alignmentNumber={props.alignmentNumber} showSettings={props.showSettings}/>
+    </div>
   )
 }
 
-function StatsContainer(props) {
+function Stats(props) {
   const [alignmentList, setAlignmentList] = useState([])
   const wrapperRef = useRef(null);
 
@@ -42,7 +42,7 @@ function StatsContainer(props) {
 
   return (
     <div className='statsMask'>
-      <div ref={wrapperRef} className='statsContainer' style={{transform:`translateY(${props.showStats ? '0px' : `-100%`})`}} >
+      <div ref={wrapperRef} className='stats' style={{transform:`translateY(${props.showStats ? '0px' : `-100%`})`}} >
         <Number label={'Score'} value={props.score}/>
         <Number label={'possible Alignments'} value={props.alignmentNumber} />
         <div className='statsWrapper' style={{width: (props.showSettings ? 'calc(100% - var(--settingsBar-size))' : '100%')}}>

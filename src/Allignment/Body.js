@@ -6,7 +6,7 @@ import { Headline } from './Components/Headline'
 import { TextInput } from './Components/TextInput';
 import { SettingsContainer, SettingsSlideContainer } from './Components/Settings';
 import { Select } from './Components/Select';
-import { Stats } from './Components/Stats';
+import { StatsContainer } from './Components/Stats';
 import { NumberInput } from './Components/NumberInput';
 import { Switch } from './Components/Switch';
 import { Button } from './Components/Button';
@@ -74,7 +74,7 @@ export function Alignment() {
       <Headline>
         <TextInput label={'Sequence 1:'} seq={seq1} handleChange={(e) => setSeq1(e.target.value.toUpperCase())}/>
         <TextInput label={'Sequence 2:'} seq={seq2} handleChange={(e) => setSeq2(e.target.value.toUpperCase())}/>
-        <Stats showStats={showStats} score={score} alignmentList={alignmentList} alignmentNumber={alignmentNumber} showSettings={showSettings} handleClick={() => setShowStats(!showStats)}/>
+        <StatsContainer showStats={showStats} score={score} alignmentList={alignmentList} alignmentNumber={alignmentNumber} showSettings={showSettings} handleClick={() => setShowStats(!showStats)}/>
         <SettingsContainer showSettings={showSettings} algorithm={algorithm} handleClick={() => setShowSettings(!showSettings)} >
           <Select value={algorithm} options={['Needleman-Wunsch', 'Needleman-Wunsch-Linear', 'Smith-Waterman', 'Gotoh']} handleChange={(e) => setAlgorithm(parseInt(e.target.value))}/>
           <Select value={substitutionsMatrix} options={['Custom', 'Blosumn45', 'Blosumn50', 'Blosumn62', 'Blosumn80']} handleChange={(e) => setSubstitutionsMatrix(parseInt(e.target.value))}/>

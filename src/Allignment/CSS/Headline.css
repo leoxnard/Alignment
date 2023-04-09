@@ -1,6 +1,6 @@
 .headline {
   height: var(--headline-size);
-  width: calc(100% - 20px);
+  width: calc(100vw - 20px);
   background-color: var(--color-1);
   font-size: var(--font-size);
   margin: 0;
