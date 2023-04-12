@@ -2,43 +2,49 @@ import React, { useState, useRef, useMemo, useEffect } from 'react'
 import { Number } from './Number'
 import '../CSS/Stats.css'
 
-export function StatsContainer(props) {
+export const StatsContainer = React.memo((props) => {
   return (
     <div className='statsContainer'>
-      <button className={props.showStats ? 'statsButton onClick' : 'statsButton'} onClick={props.handleClick}/>
-      <Stats showStats={props.showStats} score={props.score} alignmentList={props.alignmentList} alignmentNumber={props.alignmentNumber} showSettings={props.showSettings}/>
+      <button className={props.showStats ? 'statsButton onClick' : 'statsButton'} 
+        onClick={props.handleClick}/>
+      <Stats showStats={props.showStats} 
+        score={props.score} 
+        alignmentList={props.alignmentList} 
+        alignmentNumber={props.alignmentNumber} 
+        showSettings={props.showSettings}/>
     </div>
   )
-}
+})
 
-function Stats(props) {
-  const [alignmentList, setAlignmentList] = useState([])
+const Stats = React.memo((props) => {
+  const [memorizedAlignmentList, setMemorizedAlignmentList] = useState([])
   const wrapperRef = useRef(null);
 
   useEffect(() => {
     if (props.showStats) {
-      setAlignmentList(props.alignmentList);
+      setMemorizedAlignmentList(props.alignmentList);
     }
   }, [props.showStats, props.alignmentList]);
 
   const memorizedAlignments = useMemo(() => {
-    if (alignmentList.length > 1000) {
+    if (memorizedAlignmentList.length > 1000) {
       return (
         <div key={0} className='alignment'>
-          <p>{alignmentList[0][0]}</p>
-          <p>{alignmentList[0][2]}</p>
-          <p>{alignmentList[0][1]}</p>
+          <p>{memorizedAlignmentList[0][0]}</p>
+          <p>{memorizedAlignmentList[0][2]}</p>
+          <p>{memorizedAlignmentList[0][1]}</p>
       </div>
       )
     }
-    return alignmentList.map( ([str1, str2, symbol], index) => (
+
+    return memorizedAlignmentList.map( ([str1, str2, symbol], index) => (
       <div key={index} className='alignment'>
         <p>{str1}</p>
         <p>{symbol}</p>
         <p>{str2}</p>
       </div>
     ))
-  }, [alignmentList])
+  }, [memorizedAlignmentList])
 
   return (
     <div className='statsMask'>
@@ -51,4 +57,4 @@ function Stats(props) {
       </div>
     </div>
   );
-}
+})

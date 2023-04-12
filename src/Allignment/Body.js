@@ -70,7 +70,7 @@ export function Alignment() {
 
   return (
     <Fragment>
-      <Version value={'v2.2.1'} />
+      <Version value={'v2.2.2'} />
       <Headline>
         <TextInput label={'Sequence 1:'} seq={seq1} handleChange={(e) => setSeq1(e.target.value.toUpperCase())}/>
         <TextInput label={'Sequence 2:'} seq={seq2} handleChange={(e) => setSeq2(e.target.value.toUpperCase())}/>
@@ -94,7 +94,17 @@ export function Alignment() {
           </SettingsSlideContainer>
         </SettingsContainer>
       </Headline>
-      <Matrix seq1={seq1} seq2={seq2} tracebackMatrix={tracebackMatrix} scoreMatrix={scoreMatrix} minScore={minScore} maxScores={maxScores} minimalistic={minimalistic} scale={scale} matrixHeight={matrixHeight * scale} matrixWidth={matrixWidth * scale}/>
+      <Matrix 
+        seq1={seq1} 
+        seq2={seq2} 
+        tracebackMatrix={tracebackMatrix} 
+        scoreMatrix={scoreMatrix} 
+        minScore={minScore} 
+        maxScores={maxScores} 
+        minimalistic={minimalistic} 
+        scale={scale} 
+        matrixHeight={matrixHeight * scale} 
+        matrixWidth={matrixWidth * scale}/>
     </Fragment>
   )
 }

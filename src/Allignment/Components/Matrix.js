@@ -14,7 +14,6 @@ function Square(props) {
 function Matrix(props) {
   const { seq1, seq2, scoreMatrix, tracebackMatrix, minScore, maxScores, minimalistic } = props;
   const squares = useMemo(() => {
-    //console.log('rerender')
     let squares = [];
     for (let i=0; i <= scoreMatrix.length - 1; i++){
       let buttonClassName = 'square';

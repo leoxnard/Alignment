@@ -4,7 +4,7 @@
   width: calc(var(--settingsBar-size) - 30px);
   font-size: var(--font-size);
   color: var(--text-color);
-  padding: 10px;
+  padding: 0px 0px 0px 10px;
   margin: 0px;
   border: solid 5px var(--color-1);
   border-radius: 0;

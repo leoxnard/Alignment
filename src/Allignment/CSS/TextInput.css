@@ -1,11 +1,12 @@
 .textInputContainer {
   background-color: var(--color-2);
   height: 100%;
-  width: calc(100% - 120px);
+  width: calc(100%);
   align-items: center;
   display: inline-flex;
   padding: 7px;
   padding-right: 0;
+  flex-grow: 1;
 }
 
 .textInput {

@@ -24,6 +24,7 @@
 
 .headlineLabel {
   margin: 5px;
+  flex-shrink: 0;
 }
 
 .statsButton,

@@ -38,3 +38,10 @@ code {
   --row-length: 2;
   --column-length: 2;
 }
+
+@media screen and (max-width: 600px) {
+  :root {
+    --font-size: 12px;
+    --box-size: 30px;
+  }
+}

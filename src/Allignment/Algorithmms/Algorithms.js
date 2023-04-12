@@ -5,8 +5,9 @@ import { Gotoh } from "./Gotoh";
 import { substitutionsMatrixGapScore } from "./Substitutionsmatrices";
 import { getAllAlignments } from '../HelpFunctions/AlgorithmHelpers';
 
+// return [scoreMatrix_, minScore_, maxScores_, tracebackMatrix_, alignmentList_, alignmentNumber_, score_]
 export function computeScores(seq1, seq2, matchScore, mismatchScore, gapScore_, extensionScore, substitutionsMatrix, algorithmms, showAllAlignments) {
-  if (seq1.length === 0 && seq2.length === 0) {return ([[0,0,0,0], 4, [4], [['','',''],['','',''],['','',''],['','','']], [], 0])}
+  if (seq1.length === 0 && seq2.length === 0) {return ([[0,0,0,0], 4, [4], [['','',''],['','',''],['','',''],['','','']], [], 0, 0])}
   const gapScore = substitutionsMatrixGapScore(substitutionsMatrix, gapScore_);
   if (algorithmms === 0) {
     return NeedlemanWunsch(seq1, seq2, matchScore, mismatchScore, gapScore, substitutionsMatrix);
