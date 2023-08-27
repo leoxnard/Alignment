@@ -1,0 +1,32 @@
+.switchContainer {
+  height: calc(var(--box-size) + 10px);
+  width:fit-content;
+  background-color: var(--color-1);
+  padding: 5px;
+  border: none;
+  position: relative;
+  display:inline-flex;
+}
+
+.object {
+  height: calc(100% - 10px);
+  text-align: center;
+  color: var(--text-color);
+  font-size: var(--font-size);
+  margin: 5px;
+  align-items: center;
+  display: flex;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.mutableObject {
+  height: var(--box-size);
+  background-color: var(--color-2);
+  position: absolute;
+  transition: all 0.5s ease;
+}
+
+.mutableObject:hover {
+  background-color: var(--color-2-accent);
+}

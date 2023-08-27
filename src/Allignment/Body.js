@@ -13,7 +13,7 @@ import { Button } from './Components/Button';
 import { Slide } from './Components/Slide';
 import { RandomButtons } from './Components/RandomButtons';
 
-export function Alignment() {
+export function Alignment(props) {
   const [algorithm, setAlgorithm] = useState(0);
   const [substitutionsMatrix, setSubstitutionsMatrix] = useState(0);
 
@@ -72,8 +72,8 @@ export function Alignment() {
     <Fragment>
       <Version value={'v2.2.2'} />
       <Headline>
-        <TextInput label={'Sequence 1:'} seq={seq1} handleChange={(e) => setSeq1(e.target.value.toUpperCase())}/>
-        <TextInput label={'Sequence 2:'} seq={seq2} handleChange={(e) => setSeq2(e.target.value.toUpperCase())}/>
+        <TextInput label={'Seq 1:'} seq={seq1} handleChange={(e) => setSeq1(e.target.value.toUpperCase())}/>
+        <TextInput label={'Seq 2:'} seq={seq2} handleChange={(e) => setSeq2(e.target.value.toUpperCase())}/>
         <StatsContainer showStats={showStats} score={score} alignmentList={alignmentList} alignmentNumber={alignmentNumber} showSettings={showSettings} handleClick={() => setShowStats(!showStats)}/>
         <SettingsContainer showSettings={showSettings} algorithm={algorithm} handleClick={() => setShowSettings(!showSettings)} >
           <Select value={algorithm} options={['Needleman-Wunsch', 'Needleman-Wunsch-Linear', 'Smith-Waterman', 'Gotoh']} handleChange={(e) => setAlgorithm(parseInt(e.target.value))}/>
@@ -86,9 +86,10 @@ export function Alignment() {
               <NumberInput label={'Extension'} value={extensionScore} handleChange={(e) => setExtensionScore(e.target.value)}/>
               <Switch label1={'Regular'} label2={'Minimalistic'} value={minimalistic} handleClick={(e) => setMinimalistic(!minimalistic)}/>
               <Button label={'all Results'} disabled={alignmentNumber > 1000 ? 1 : 0} handleClick={() => showAllAlignments()}/>
-              <Slide label={'Scale'} value={scale} handleChange={(e) => {setScale(e.target.value);}} />
+              <Slide label={'Scale'} value={scale} min={'0.3'} max={'1'} step={'0.01'} handleChange={(e) => setScale(e.target.value)} />
               <SettingsSlideContainer show={(substitutionsMatrix === 0) ? true : false} position={'calc((var(--box-size) + 5px) * -1)'} >
                 <RandomButtons setSeq1={setSeq1} setSeq2={setSeq2} minimalistic={minimalistic} scale={scale}/>
+                <Button label={'three Sequences'} style={{width: 'calc(var(--settingsBar-size) - 30px)'}} handleClick={props.changeMode}/>
               </SettingsSlideContainer>
             </SettingsSlideContainer>
           </SettingsSlideContainer>

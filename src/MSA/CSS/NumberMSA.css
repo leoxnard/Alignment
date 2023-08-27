@@ -1,0 +1,22 @@
+.numberContainer {
+  height: calc(var(--box-size) + 10px);
+  color: var(--text-color);
+  margin: 5px;
+  margin-top: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+.number {
+  height: calc(var(--box-size) - 10px);
+  min-width: calc(var(--box-size) - 10px);
+  background-color: var(--color-2);
+  color: var(--text-color);
+  font-size: var(--font-size);
+  border: 5px solid var(--color-1);
+  margin: 5px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

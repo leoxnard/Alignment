@@ -1,0 +1,33 @@
+.textInputContainer {
+  background-color: var(--color-2);
+  height: 100%;
+  width: calc(100%);
+  align-items: center;
+  display: inline-flex;
+  padding: 7px;
+  padding-right: 0;
+  flex-grow: 1;
+}
+
+.textInput {
+  color: var(--text-color);
+  background-color: transparent;
+  border: none;
+  height: 100%;
+  width: calc(100%);
+  font-size: var(--font-size);
+}
+
+.textInput:focus {
+  outline: none;
+}
+
+.counter {
+  background-color: transparent;
+  color: var(--text-color);
+  opacity: 0.4;
+  margin-left: -1px;
+  display: flex;
+  align-items: center;
+  padding: 7px;
+}

@@ -37,6 +37,25 @@ code {
   --square-size: 50px;
   --row-length: 2;
   --column-length: 2;
+
+  --raster-size: 50px;
+  --raster-color: #ffffff30;
+  --raster-color-accent: #505050;
+  --raster-width: 2px;
+  --path-color: #8e0000;
+  --path-shadow-color: #ff000052;
+
+  --rank-color-0: #787878;
+  --rank-color-1: #3C3EBB;
+  --rank-color-2: #0005FF;
+  --rank-color-3: #0067E8;
+  --rank-color-4: #00C9D0;
+  --rank-color-5: #22C26F;
+  --rank-color-6: #45BA0E;
+  --rank-color-7: #A1DD07;
+  --rank-color-8: #FEFF00;
+  --rank-color-9: #FF7500;
+  --rank-color-10: #FF0000;
 }
 
 @media screen and (max-width: 600px) {

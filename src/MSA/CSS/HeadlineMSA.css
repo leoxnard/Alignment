@@ -1,0 +1,62 @@
+.headline {
+  height: var(--headline-size);
+  width: calc(100vw - 20px);
+  background-color: var(--color-1);
+  font-size: var(--font-size);
+  margin: 0;
+  padding: 10px;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+}
+
+.headlineFragment {
+  height: calc(var(--headline-size) - 30px);
+  width: calc((100% - 120px)/2);
+  color: var(--text-color);
+  margin: 5px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+.headlineLabel {
+  margin: 5px;
+  flex-shrink: 0;
+}
+
+.statsButton,
+.settingsButton {
+  background-color: transparent;
+  opacity: 0.8;
+  background-image: url('./Icons/StatsButton.png');
+  transform: rotate(180deg);
+  background-size: calc(var(--headline-size) - 25px) calc(var(--headline-size) - 25px);
+  background-repeat: no-repeat;
+  background-position: center;
+  height: calc(var(--headline-size) - 20px);
+  width: calc(var(--headline-size) - 20px);
+  margin: 10px;
+  padding: 5px;
+  border: none;
+  display: inline-flex;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.settingsButton {
+  background-image: url('./Icons/SettingsButton.png');
+  transform: rotate(90deg);
+}
+
+.statsButton:hover,
+.settingsButton:hover {
+  opacity: 1;
+}
+
+.onClick {
+  opacity: 1;
+  transform: rotate(0deg);
+}

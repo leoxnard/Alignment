@@ -9,7 +9,7 @@ export function Slide(props) {
   return (
     <div className='rangeContainer'>
       <label> {props.label} </label>
-      <input type='range' min='0.3' max='1' step='0.01' className='range' value={props.value} onChange={handleChange}/>
+      <input className='range' type='range' min={props.min} max={props.max} step={props.step} value={props.value} onChange={handleChange}/>
     </div>
   )
 }

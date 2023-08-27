@@ -14,3 +14,7 @@
   border: none;
   padding: 5px;
 }
+
+.randomButton:hover {
+  background-color: var(--color-2-accent);
+}
