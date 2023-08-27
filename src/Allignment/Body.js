@@ -70,7 +70,7 @@ export function Alignment(props) {
 
   return (
     <Fragment>
-      <Version value={'v2.2.2'} />
+      <Version value={'v3.0'} />
       <Headline>
         <TextInput label={'Seq 1:'} seq={seq1} handleChange={(e) => setSeq1(e.target.value.toUpperCase())}/>
         <TextInput label={'Seq 2:'} seq={seq2} handleChange={(e) => setSeq2(e.target.value.toUpperCase())}/>
