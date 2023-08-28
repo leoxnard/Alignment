@@ -19,7 +19,7 @@ export function RandomButtons(props) {
         <button className='randomButton' onClick={() => handleClick(false)}> { 'random AA' } </button>
       </div>
       <div className='randomSlideContainer'>
-        <SlideMSA value={props.randomSize} handleChange={props.handleChange} min={20} max={200} step={1} label={'Size:'} style={{width: 'calc(var(--settingsBar-size) - 70px)', margin: '0 0 0px 10px'}} />
+        <SlideMSA value={props.randomSize} handleChange={props.handleChange} min={20} max={300} step={1} label={'Size:'} style={{width: 'calc(var(--settingsBar-size) - 90px)', margin: '0 0 0px 10px'}} />
         <label className='buttonCounter'> { props.randomSize } </label>
       </div>
     </div>
