@@ -15,10 +15,10 @@ Enter custom sequences at the top of the page. The site supports both DNA and am
 
 ### Options ☰
 1. **Choose the Algorithm[^2seq]**
-   - **a) Needleman-Wunsch**: Ideal for global alignment of sequences, using dynamic programming.
-   - **b) Needleman-Wunsch with Linear Space**: Optimized for memory efficiency.
-   - **c) Smith-Waterman**: Best for local alignment, identifying similar regions within sequences.
-   - **d) Gotoh**: Incorporates affine gap penalties, favoring gap groups over multiple single gaps, ideal for complex alignments.
+   - **Needleman-Wunsch**: Ideal for global alignment of sequences, using dynamic programming.
+   - **Needleman-Wunsch with Linear Space**: Optimized for memory efficiency.
+   - **Smith-Waterman**: Best for local alignment, identifying similar regions within sequences.
+   - **Gotoh**: Incorporates affine gap penalties, favoring gap groups over multiple single gaps, ideal for complex alignments.
 
 2. **Choose the Substitution Matrix**
    - **BLOSSUM**: Tailored substitution matrices for varying protein similarities. More information: [BLOSSUM Wikipedia](https://en.wikipedia.org/wiki/BLOSUM).
