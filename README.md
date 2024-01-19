@@ -1,3 +1,37 @@
+View website on https://allignment.netlify.app
+
+# Description
+
+## 1. Choose number of Sequences
+In the option bar on the right, you can choose between 2 or 3 sequences to compare. If you choose 2 Sequences, you are able to choose between different Algorithms, if you choose 3 Sequences, it will automaticly choose the global alignment algorithm.
+
+## 2. Choose the algorithm (only for 2 sequences)
+The are multiple algorithms to choose on in the option bar:
+### a) Needleman-Wunsch
+Description
+
+### b) Needleman-Wunsch with linear space
+Description
+
+### c) Smith-Waterman
+Description
+
+### d) Gotoh
+Description
+
+## 3. Choose the substitution matrix
+### BLOSSUM
+If you want to compare amino acids, you can choose one of the following substitutions matrix: blossum 45, blossum50, blossum62, blossum80. Large numbers like blossum80, are designed for more related Proteins, where as small numbers like blossum45 are designed for distantly related proteins. These substitution matrices contain values, which score the replacement of on amino acid with another or a deletion. For more information, read the following link: https://en.wikipedia.org/wiki/BLOSUM .
+### Custom Matrix
+choose matchscore, mismatchscore and gapscore. Add a description what these means in the result.
+
+## 4. Choose view (only for 2 sequences)
+Choose between regular view or minimalistic view.
+
+## 5. Display all results
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
