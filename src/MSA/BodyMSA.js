@@ -11,10 +11,6 @@ import { NumberInput } from './Components/NumberInput';
 import { RandomButtons } from './Components/RandomButtonsMSA';
 import { Button } from './Components/ButtonMSA';
 
-// ALADWLALWDNLAWD
-// AAWLDJNAWDNJ
-// A
-
 export function MSA(props) {
   const [substitutionsMatrix, setSubstitutionsMatrix] = useState(0);
 

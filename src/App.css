@@ -10,3 +10,20 @@
 .App::-webkit-scrollbar {
   display: none;
 }
+
+.navigation_bar {
+  display: flex;
+  background: var(--color-2);
+  padding: 5px 0 5px 5px;
+  font-size: 20px;
+  color: black;
+}
+
+.navigation_item {
+  margin: 10px;
+  color: white;
+  font-size: var(--font-size);
+  text-decoration: none;
+  background: var(--color-1);
+  padding: 12px;
+}

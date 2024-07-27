@@ -18,7 +18,7 @@
   position: relative;
   display: grid;
   grid-template-columns: repeat(var(--row-length), minmax(min-content, max-content));
-  width: fit-content;
+  width: auto;
   transform-origin: 0 0;
   transform: scale(var(--matrix-scale));
 }
@@ -118,5 +118,5 @@
 .level10Score {background-color: #ff0000;}
 
 .matrixContainer::-webkit-scrollbar {
-    display: none;
-  }
+  display: none;
+}

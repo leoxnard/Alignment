@@ -1,26 +1,17 @@
 import React from 'react';
 import './App.css';
-import Allignment from './Allignment/Body';
-import MSA from './MSA/BodyMSA';
+import Home from './LandingPage/Home';
+import AlgorithmPage from './LandingPage/AlgorithmPage';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
-  const [mode, setMode] = React.useState(0);
-
-  const handleChangeMode = (mode) => {
-    setMode(mode);
-  }
-
-  if (mode === 0) {
-    return (
-      <div className="App">
-        <Allignment changeMode={() => handleChangeMode(1)}/>
-      </div>
-    );
-  }
   return (
-    <div className="App">
-      <MSA changeMode={() => handleChangeMode(0)}/>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/algorithm/:id" element={<AlgorithmPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
