@@ -1,6 +1,6 @@
 # Allignment Website
 
-Welcome to the Alignment website, an interactive tool for analyzing and comparing DNA and amino acid sequences using various bioinformatics algorithms. Visit the website [here](https://allignment.netlify.app) or follow the instructions below to run it locally.
+Welcome to the Alignment website, an interactive tool for analyzing and comparing DNA and amino acid sequences using various bioinformatics algorithms. Visit the website [here](https://alignment.netlify.app) or follow the instructions below to run it locally.
 
 ## Description
 This platform allows users to input custom sequences and leverage different algorithms for detailed sequence alignment analysis, ideal for research and educational purposes.
